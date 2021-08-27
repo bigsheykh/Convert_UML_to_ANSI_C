@@ -1,9 +1,14 @@
-DiagramGetter:
+classBaseUML:
+  1: SameAttributeAndMethodName
+  2: SameAttributeAndClassName
+  3: SameMethodAndClassName
+  4: get directory of phase1 output
+
+diagramGUI:
   1: get directory of phase1 output
   2: Show diagram
   3: make 2 phase controller
   4: redesign info getter
-
 
 Phase1CodeGeneration:
   1: output classes name
