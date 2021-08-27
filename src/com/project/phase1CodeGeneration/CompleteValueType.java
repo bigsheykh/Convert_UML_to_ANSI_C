@@ -1,4 +1,4 @@
-package com.project.Phase1CodeGeneration;
+package com.project.phase1CodeGeneration;
 
 import com.project.classBaseUML.ValueType;
 

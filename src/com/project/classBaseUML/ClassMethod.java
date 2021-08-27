@@ -1,6 +1,6 @@
 package com.project.classBaseUML;
 
-import com.project.Phase2CodeGeneration.LexicalAnalyzer;
+import com.project.phase2CodeGeneration.LexicalAnalyzer;
 import org.javatuples.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

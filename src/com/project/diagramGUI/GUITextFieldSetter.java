@@ -1,6 +1,6 @@
 package com.project.diagramGUI;
 
-import com.project.Phase2CodeGeneration.LexicalAnalyzer;
+import com.project.phase2CodeGeneration.LexicalAnalyzer;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

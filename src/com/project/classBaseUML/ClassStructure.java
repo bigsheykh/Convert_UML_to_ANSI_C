@@ -1,6 +1,6 @@
 package com.project.classBaseUML;
 
-import com.project.Phase2CodeGeneration.LexicalAnalyzer;
+import com.project.phase2CodeGeneration.LexicalAnalyzer;
 import com.project.graphBaseDependency.DependencyEdge;
 import com.project.graphBaseDependency.DependencyStatus;
 import org.javatuples.Pair;
