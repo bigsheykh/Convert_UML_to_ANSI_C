@@ -29,7 +29,7 @@ public class Main implements Runnable{
     static public GUIDiagram guiDiagram;
 
     public static void main(String[] args) {
-//        CommandExecutor.executeCommand("python3 src/phase2Lexer/clex.py SearchEngine.c");
+//        CommandExecutor.executeCommand("python3 src/phase2Lexer/clex.py SearchEngine.c SearchEngine.tokens");
         documentFactory = DocumentBuilderFactory.newInstance();
         try {
             documentBuilder = documentFactory.newDocumentBuilder();

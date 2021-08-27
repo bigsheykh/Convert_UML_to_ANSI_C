@@ -161,17 +161,17 @@ class Lexer:
 
 if __name__ == "__main__":
     CFileName = sys.argv[1]
+    outputFile = sys.argv[2]
     lexer = Lexer().build()
     lexer.input(open(CFileName, "r").read())
     counter = 0
     os.makedirs("result", exist_ok=True)
+    result = open("result/" + outputFile, "w")
     while True:
         tok = lexer.token()
         if not tok:
             break
         counter += 1
-        open("result/" + str(counter) + ".type", "w").write(tok.type)
-        open("result/" + str(counter) + ".value", "w").write(tok.value)
-        print(tok.__str__())
-    open("result/counter", "w").write(str(counter))
+        result.write(str(counter) + " " + tok.type + " " + str(tok.lexpos) + " " + str(tok.value.__len__()))
+        result.write("\n")
 
