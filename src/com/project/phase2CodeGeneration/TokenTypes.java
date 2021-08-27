@@ -1,5 +1,42 @@
 package com.project.phase2CodeGeneration;
 
 public enum TokenTypes {
+    COMMENT,
+    MACRO,
+    STRING,
 
+    CONST,
+    VOLATILE,
+    EXTERN,
+    STRUCT,
+    UNION,
+    CLASS,
+    TYPEDEF,
+    STATIC,
+    AUTO,
+    REGISTER,
+    ID,
+    NUMBER,
+
+    RESERVED_KEYWORD,
+
+    DOUBLE_COLON,
+    SEMI_COLON,
+    COLON,
+    COMMA,
+    DOT,
+    ELLIPSIS,
+    ARROW,
+    TILDE,
+    STAR,
+    OPERATOR_OR_ASSIGN,
+
+    OPEN_PARENTHESIS,
+    CLOSE_PARENTHESIS,
+    OPEN_CURLY_BRACKET,
+    CLOSE_CURLY_BRACKET,
+    OPEN_SQUARE_BRACKET,
+    CLOSE_SQUARE_BRACKET,
+
+    UNKNOWN
 }

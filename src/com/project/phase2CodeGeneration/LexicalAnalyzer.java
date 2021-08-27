@@ -5,30 +5,51 @@ import java.util.regex.Pattern;
 
 public class LexicalAnalyzer {
 
-    public static final String[] reservedKeyword = new String[]{
+    private static final String[] reservedKeyword = new String[]{
             "_Packed", "break", "case", "continue", "default",
-            "do", "else", "enum", "for", "goto", "if",
-            "return", "signed", "sizeof", "switch",
-            "unsigned", "while"
+            "do", "else", "enum", "for", "goto", "if", "return",
+            "signed", "sizeof", "switch", "unsigned", "while"
     };
 
-    static String constKeyword = "const";
-    static String volatileKeyword = "volatile";
-    static String extern = "extern";
-    static String struct = "struct";
-    static String union = "union";
-    static String classKeyword = "class";
-    static String typedef = "typedef";
-    static String staticKeyword = "static";
-    static String auto = "static";
-    static String register = "register";
+    private static final String[] notUsefulCharacters = new String[]{
 
-    public static final String[] reservedTypeDescribers = new String[]{
+    };
+
+    private static final String openParenthesis = "(";
+    private static final String closeParenthesis = ")";
+    private static final String openCurlyBracket = "{";
+    private static final String CloseCurlyBracket = "}";
+    private static final String openSquareBracket = "[";
+    private static final String CloseSquareBracket = "]";
+
+    private static final String ellipsis = "...";
+    private static final String star = "*";
+    private static final String arrow = "->";
+    private static final String Dot = ".";
+    private static final String comma = ",";
+    private static final String semiColon = ";";
+    private static final String colon = ":";
+    private static final String tilde = "~";
+    private static final String doubleColon = "::";
+
+    private static final String constKeyword = "const";
+    private static final String volatileKeyword = "volatile";
+    private static final String extern = "extern";
+    private static final String struct = "struct";
+    private static final String union = "union";
+    private static final String classKeyword = "class";
+    private static final String typedef = "typedef";
+    private static final String staticKeyword = "static";
+    private static final String auto = "auto";
+    private static final String register = "register";
+    private static final String enumKeyword = "enum";
+
+    private static final String[] reservedTypeDescribers = new String[]{
             constKeyword, volatileKeyword, extern, struct, union,
             classKeyword, typedef, staticKeyword, auto, register
     };
 
-    public static final String[] reservedTypes = new String[]{
+    private static final String[] reservedTypes = new String[]{
             "char", "signed char", "unsigned char",
             "short", "short int", "signed short", "signed short int", "unsigned short", "unsigned short int",
             "int", "signed", "signed int", "unsigned", "unsigned int",
@@ -53,7 +74,7 @@ public class LexicalAnalyzer {
             return s.substring(volatileKeyword.length() + 1);
         return s;
     }
-    public static String deleteClassSpecifier(String s)
+    private static String deleteClassSpecifier(String s)
     {
         if (s.startsWith(extern))
             return deleteClassSpecifier(s.substring(extern.length() + 1));
@@ -68,13 +89,16 @@ public class LexicalAnalyzer {
         return s;
     }
 
-    public static String unStruct(String s) {
+    private static String unStruct(String s) {
         if (s.startsWith(struct))
             return s.substring(struct.length() + 1);
         if (s.startsWith(union))
             return s.substring(union.length() + 1);
         if (s.startsWith(classKeyword))
             return s.substring(classKeyword.length() + 1);
+        if (s.startsWith(enumKeyword))
+            return s.substring(enumKeyword.length() + 1);
+
         return s;
     }
 
@@ -84,4 +108,8 @@ public class LexicalAnalyzer {
         return isNameOkayInC(unStruct(deleteClassSpecifier(s))) ||
                 Arrays.asList(reservedTypes).contains(deleteClassSpecifier(s));
     }
+
+    //TODO type
+    //TODO deleteTypeQualifier
+    //TODO Integrate with clex.py
 }

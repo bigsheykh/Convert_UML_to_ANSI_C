@@ -27,7 +27,9 @@ public class Main implements Runnable{
     static private JFrame frame;
     static public Transformer transformer;
     static public GUIDiagram guiDiagram;
+
     public static void main(String[] args) {
+//        CommandExecutor.executeCommand("python3 src/phase2Lexer/clex.py SearchEngine.c");
         documentFactory = DocumentBuilderFactory.newInstance();
         try {
             documentBuilder = documentFactory.newDocumentBuilder();
