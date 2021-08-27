@@ -4,6 +4,7 @@ public enum TokenTypes {
     COMMENT,
     MACRO,
     STRING,
+    EMPTY_STRING,
 
     CONST,
     VOLATILE,
@@ -17,8 +18,13 @@ public enum TokenTypes {
     REGISTER,
     ID,
     NUMBER,
+    TYPES,
+    ENUM,
+    SIGN,
+    THIS,
 
     RESERVED_KEYWORD,
+    SIZEOF,
 
     DOUBLE_COLON,
     SEMI_COLON,
@@ -27,8 +33,10 @@ public enum TokenTypes {
     DOT,
     ELLIPSIS,
     ARROW,
-    TILDE,
+    TILDA,
+    DESTRUCT,
     STAR,
+    REFERENCE,
     OPERATOR_OR_ASSIGN,
 
     OPEN_PARENTHESIS,

@@ -19,7 +19,7 @@ class Lexer:
         'AUTO', 'BREAK', 'CASE', 'CHAR', 'CONST', 'CONTINUE', 'DEFAULT', 'DO', 'DOUBLE',
         'ELSE', 'ENUM', 'EXTERN', 'FLOAT', 'FOR', 'GOTO', 'IF', 'INT', 'LONG', 'REGISTER',
         'RETURN', 'SHORT', 'SIGNED', 'SIZEOF', 'STATIC', 'STRUCT', 'SWITCH', 'TYPEDEF',
-        'UNION', 'UNSIGNED', 'VOID', 'VOLATILE', 'WHILE', 'TAB',  'CLASS'
+        'UNION', 'UNSIGNED', 'VOID', 'VOLATILE', 'WHILE',  'CLASS', 'THIS'
     )
 
     tokens = reserved + (
@@ -46,21 +46,19 @@ class Lexer:
         # Conditional operator (?)
         'CONDOP',
 
-        # Delimeters ( ) [ ] { } , . ; :
+        # Delimeters ( ) [ ] { } , . ; : :: ~ ::~
         'LPAREN', 'RPAREN',
         'LBRACKET', 'RBRACKET',
         'LBRACE', 'RBRACE',
-        'COMMA', 'PERIOD', 'SEMI', 'COLON', 'DOUBLECOLON', 'TILDA',
+        'COMMA', 'PERIOD', 'SEMI', 'COLON', 'DOUBLECOLON', 'TILDA', 'DESTRUCT',
 
         # Ellipsis (...)
         'ELLIPSIS',
 
         # Ignore
-        'preprocessor', 'comment', 'WHITESPACE', 'NEWLINE'
+        'preprocessor', 'comment', 'WHITESPACE', 'NEWLINE', 'LINECOMMENT','TAB',
     )
 
-    # Newlines
-    t_ignore = r'\x0x'
 
     # Operators
     t_WHITESPACE = r'\ '
@@ -123,10 +121,12 @@ class Lexer:
     t_SEMI = r';'
     t_TILDA = r'~'
     t_DOUBLECOLON = r'::'
+    t_DESTRUCT = r'::~'
     t_COLON = r':'
     t_ELLIPSIS = r'\.\.\.'
     t_preprocessor = r'\#(.)*?\n'
     t_comment = r'/\*(.|\n)*?\*/'
+    t_LINECOMMENT = r'//.*'
 
     # Identifiers and reserved words
     def t_ID(self, t):
@@ -171,7 +171,13 @@ if __name__ == "__main__":
         tok = lexer.token()
         if not tok:
             break
+        typeOutput = open("result/" + outputFile + str(counter) + ".type", "w")
+        typeOutput.write(tok.type)
+        valueOutput = open("result/" + outputFile + str(counter) +  ".value", "w")
+        valueOutput.write(tok.value)
         counter += 1
-        result.write(str(counter) + " " + tok.type + " " + str(tok.lexpos) + " " + str(tok.value.__len__()))
-        result.write("\n")
 
+#         result = open("result/" + outputFile, "w")
+#         result.write(tok.type + " " + str(tok.lexpos) + " " + str(tok.lexpos + tok.value.__len__()))
+#         result.write("\n")
+    result.write(str(counter))

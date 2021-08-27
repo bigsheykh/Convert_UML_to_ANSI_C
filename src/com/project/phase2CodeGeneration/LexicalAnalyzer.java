@@ -1,6 +1,17 @@
 package com.project.phase2CodeGeneration;
 
+import com.project.CommandExecutor;
+import org.javatuples.Pair;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Scanner;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 public class LexicalAnalyzer {
@@ -10,27 +21,6 @@ public class LexicalAnalyzer {
             "do", "else", "enum", "for", "goto", "if", "return",
             "signed", "sizeof", "switch", "unsigned", "while"
     };
-
-    private static final String[] notUsefulCharacters = new String[]{
-
-    };
-
-    private static final String openParenthesis = "(";
-    private static final String closeParenthesis = ")";
-    private static final String openCurlyBracket = "{";
-    private static final String CloseCurlyBracket = "}";
-    private static final String openSquareBracket = "[";
-    private static final String CloseSquareBracket = "]";
-
-    private static final String ellipsis = "...";
-    private static final String star = "*";
-    private static final String arrow = "->";
-    private static final String Dot = ".";
-    private static final String comma = ",";
-    private static final String semiColon = ";";
-    private static final String colon = ":";
-    private static final String tilde = "~";
-    private static final String doubleColon = "::";
 
     private static final String constKeyword = "const";
     private static final String volatileKeyword = "volatile";
@@ -107,6 +97,184 @@ public class LexicalAnalyzer {
             return false;
         return isNameOkayInC(unStruct(deleteClassSpecifier(s))) ||
                 Arrays.asList(reservedTypes).contains(deleteClassSpecifier(s));
+    }
+
+    public static Vector<Pair<TokenTypes, String>> getTokensOfPhase2Files(String fileName)
+    {
+        Vector<Pair<TokenTypes, String>> result = new Vector<>();
+        String lexOutput = fileName + ".result";
+        Scanner lexScanner;
+        CommandExecutor.executeCommand(CommandExecutor.lexerCommand + " " + fileName + " " + lexOutput);
+        FileWriter myWriter;
+        try {
+            lexScanner = new Scanner(new File("result/" + lexOutput));
+            myWriter = new FileWriter("filename.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return result;
+        }
+
+        int counter = lexScanner.nextInt();
+        for (int i = 0; i < counter; i++)
+        {
+            String type, value;
+            try {
+                String resultBasePath = "result/" + lexOutput + i;
+                Scanner typeScanner = new Scanner(new File(resultBasePath + ".type"));
+                type = typeScanner.next();
+                Path valueNamePath = Path.of(resultBasePath + ".value");
+                value = Files.readString(valueNamePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return result;
+            }
+            TokenTypes tokenType;
+            switch (type) {
+                case "AUTO":
+                    tokenType = TokenTypes.AUTO;
+                    break;
+                case "CHAR":
+                case "DOUBLE":
+                case "FLOAT":
+                case "INT":
+                case "LONG":
+                case "SHORT":
+                case "VOID":
+                    tokenType = TokenTypes.TYPES;
+                    break;
+                case "CONST":
+                    tokenType = TokenTypes.CONST;
+                    break;
+                case "ENUM":
+                    tokenType = TokenTypes.ENUM;
+                    break;
+                case "EXTERN":
+                    tokenType = TokenTypes.EXTERN;
+                    break;
+                case "REGISTER":
+                    tokenType = TokenTypes.REGISTER;
+                    break;
+                case "SIGNED":
+                case "UNSIGNED":
+                    tokenType = TokenTypes.SIGN;
+                    break;
+                case "SIZEOF":
+                    tokenType = TokenTypes.SIZEOF;
+                    break;
+                case "STATIC":
+                    tokenType = TokenTypes.STATIC;
+                    break;
+                case "STRUCT":
+                    tokenType = TokenTypes.STRUCT;
+                    break;
+                case "TYPEDEF":
+                    tokenType = TokenTypes.TYPEDEF;
+                    break;
+                case "UNION":
+                    tokenType = TokenTypes.UNION;
+                    break;
+                case "VOLATILE":
+                    tokenType = TokenTypes.VOLATILE;
+                    break;
+                case "CLASS":
+                    tokenType = TokenTypes.CLASS;
+                    break;
+                case "THIS":
+                    tokenType = TokenTypes.THIS;
+                    break;
+                case "ID":
+                    tokenType = TokenTypes.ID;
+                    break;
+                case "ICONST":
+                case "FCONST":
+                    tokenType = TokenTypes.NUMBER;
+                    break;
+                case "SCONST":
+                case "CCONST":
+                    tokenType = TokenTypes.STRING;
+                    break;
+                case "TIMES":
+                    tokenType = TokenTypes.STAR;
+                    break;
+                case "AND":
+                    tokenType = TokenTypes.REFERENCE;
+                    break;
+                case "ARROW":
+                    tokenType = TokenTypes.ARROW;
+                    break;
+                case "LPAREN":
+                    tokenType = TokenTypes.OPEN_PARENTHESIS;
+                    break;
+                case "RPAREN":
+                    tokenType = TokenTypes.CLOSE_PARENTHESIS;
+                    break;
+                case "LBRACKET":
+                    tokenType = TokenTypes.OPEN_SQUARE_BRACKET;
+                    break;
+                case "RBRACKET":
+                    tokenType = TokenTypes.CLOSE_SQUARE_BRACKET;
+                    break;
+                case "LBRACE":
+                    tokenType = TokenTypes.OPEN_CURLY_BRACKET;
+                    break;
+                case "RBRACE":
+                    tokenType = TokenTypes.CLOSE_CURLY_BRACKET;
+                    break;
+                case "COMMA":
+                    tokenType = TokenTypes.COMMA;
+                    break;
+                case "PERIOD":
+                    tokenType = TokenTypes.DOT;
+                    break;
+                case "SEMI":
+                    tokenType = TokenTypes.SEMI_COLON;
+                    break;
+                case "COLON":
+                    tokenType = TokenTypes.COLON;
+                    break;
+                case "DOUBLECOLON":
+                    tokenType = TokenTypes.DOUBLE_COLON;
+                    break;
+                case "TILDA":
+                    tokenType = TokenTypes.TILDA;
+                    break;
+                case "DESTRUCT":
+                    tokenType = TokenTypes.DESTRUCT;
+                    break;
+                case "preprocessor":
+                    tokenType = TokenTypes.MACRO;
+                    break;
+                case "LINECOMMENT":
+                case "comment":
+                    tokenType = TokenTypes.COMMENT;
+                    break;
+                case "TAB":
+                case "WHITESPACE":
+                case "NEWLINE":
+                    tokenType = TokenTypes.EMPTY_STRING;
+                    break;
+                case "ELLIPSIS":
+                    tokenType = TokenTypes.ELLIPSIS;
+                    break;
+                default:
+                    tokenType = TokenTypes.UNKNOWN;
+                    try {
+                        myWriter.write(type + ":" + "\n");
+                        myWriter.write(value);
+                        myWriter.write("\n");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+            }
+            result.add(new Pair<>(tokenType, value));
+        }
+        try {
+            myWriter.flush();
+            myWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     //TODO type

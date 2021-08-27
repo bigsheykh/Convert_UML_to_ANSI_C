@@ -5,6 +5,9 @@ import com.project.graphBaseDependency.GraphOperation;
 import com.project.diagramGUI.*;
 import com.project.phase1CodeGeneration.CompleteDiagram;
 import com.project.phase1CodeGeneration.Phase1FileGenerator;
+import com.project.phase2CodeGeneration.LexicalAnalyzer;
+import com.project.phase2CodeGeneration.TokenTypes;
+import org.javatuples.Pair;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -29,7 +32,21 @@ public class Main implements Runnable{
     static public GUIDiagram guiDiagram;
 
     public static void main(String[] args) {
-//        CommandExecutor.executeCommand("python3 src/phase2Lexer/clex.py SearchEngine.c SearchEngine.tokens");
+        Vector<Pair<TokenTypes, String>> tokens = LexicalAnalyzer.getTokensOfPhase2Files("SearchEngine.c");
+        FileWriter myWriter;
+        try {
+            myWriter = new FileWriter("tokens.txt");
+            for(Pair<TokenTypes, String> token:tokens)
+                myWriter.write(token.toString() + "\n");
+            myWriter.flush();
+            myWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
         documentFactory = DocumentBuilderFactory.newInstance();
         try {
             documentBuilder = documentFactory.newDocumentBuilder();

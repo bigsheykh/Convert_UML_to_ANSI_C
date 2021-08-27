@@ -34,4 +34,6 @@ public class CommandExecutor {
     public static synchronized void log(String message) {
         System.out.println(format.format(new Date()) + ": " + message);
     }
+
+    public static String lexerCommand = "python3 src/phase2Lexer/clex.py";
 }

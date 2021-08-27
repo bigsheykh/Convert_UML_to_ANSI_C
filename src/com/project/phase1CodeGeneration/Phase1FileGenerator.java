@@ -5,6 +5,29 @@ import java.io.*;
 public class Phase1FileGenerator {
 
     boolean successFull;
+    private static final String openParenthesis = "(";
+    private static final String closeParenthesis = ")";
+    private static final String openCurlyBracket = "{";
+    private static final String closeCurlyBracket = "}";
+    private static final String openSquareBracket = "[";
+    private static final String closeSquareBracket = "]";
+
+    private static final String ellipsis = "...";
+    private static final String star = "*";
+    private static final String arrow = "->";
+    private static final String Dot = ".";
+    private static final String comma = ",";
+    private static final String semiColon = ";";
+    private static final String colon = ":";
+    private static final String tilde = "~";
+    private static final String doubleColon = "::";
+    private static final String destruct = "::~";
+
+    private static final String newLine = "\n";
+    private static final String tab = "\t";
+    private static final String lineComment = "//";
+    private static final String whiteSpace = " ";
+
     public Phase1FileGenerator(CompleteDiagram diagram)
     {
         successFull = false;
@@ -32,32 +55,28 @@ public class Phase1FileGenerator {
         return successFull;
     }
 
-    private String getBlock()
-    {
-        String base = "\n{\n";
-        base = base + "\t\\\\TODO.yaml:code here\n";
-        base = base + "}\n\n";
-        return base;
-    }
+    private static final String EmptyBlock = newLine + openCurlyBracket + newLine +
+            tab + lineComment + whiteSpace + "TODO:code here" + newLine +
+            closeCurlyBracket + newLine + newLine;
 
     private String generateMethod(String className, CompleteMethod method)
     {
-        String baseClassName = method.getReturnValueType().getShowName() + " " + className + "::";
+        String baseClassName = method.getReturnValueType().getShowName() + whiteSpace + className + doubleColon;
         return baseClassName +
                 method.getShowName().substring(method.getReturnValueType().getShowName().length() + 1)
-                + getBlock();
+                + EmptyBlock;
     }
 
     private String generateConstructor(String className, CompleteConstructor constructor)
     {
-        String baseClassName = className + "::" + className;
-        return baseClassName + constructor.getShowName() + getBlock();
+        String baseClassName = className + doubleColon + className;
+        return baseClassName + constructor.getShowName() + EmptyBlock;
     }
 
     private String generateDestructor(String className)
     {
-        String baseClassName = className + "::" + "~" + className;
-        return baseClassName + getBlock();
+        String baseClassName = className + destruct + className;
+        return baseClassName + EmptyBlock;
     }
 
     private String generateClassCPP(CompleteClass completeClass)
