@@ -1,5 +1,6 @@
 package com.project.classBaseUML;
 
+import com.project.Phase2CodeGeneration.LexicalAnalyzer;
 import org.javatuples.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -78,7 +79,7 @@ public class ClassAttribute<TType extends ValueType> implements DescriptiveMembe
 
     @Override
     public Pair<BasicDiagramStatus, LinkedList<String>> statusOfMember() {
-        if (!DescriptiveMember.isNameOkayInC(getName()))
+        if (!LexicalAnalyzer.isNameOkayInC(getName()))
             return DescriptiveMember.newStatus(BasicDiagramStatus.AttributeNameError,
                     "attribute:" + getName() + " name is invalid.");
         return DescriptiveMember.addDescriptionStatus(getValueType().statusOfMember(),
@@ -88,7 +89,7 @@ public class ClassAttribute<TType extends ValueType> implements DescriptiveMembe
     @Override
     public Vector<Pair<BasicDiagramStatus, LinkedList<String>>> getAllProblems() {
         Vector<Pair<BasicDiagramStatus, LinkedList<String>>> vector = new Vector<>();
-        if (!DescriptiveMember.isNameOkayInC(getName()))
+        if (!LexicalAnalyzer.isNameOkayInC(getName()))
             vector.add(DescriptiveMember.newStatus(BasicDiagramStatus.AttributeNameError,
                     "attribute:" + getName() + " name is invalid."));
         vector.addAll(DescriptiveMember.addDescriptionStatus(getValueType().getAllProblems(),

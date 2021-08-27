@@ -1,5 +1,6 @@
 package com.project.classBaseUML;
 
+import com.project.Phase2CodeGeneration.LexicalAnalyzer;
 import org.javatuples.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -92,7 +93,7 @@ public class ValueType implements DescriptiveMember, Comparable<ValueType> {
         if (getNumberOfPointer() < 0)
             return DescriptiveMember.newStatus(BasicDiagramStatus.NegativeValueTypePointer,
                     "typeName:" + getTypeName() + " number is negative.");
-        if (DescriptiveMember.isTypeOkayInC(getTypeName()))
+        if (LexicalAnalyzer.isTypeOkayInC(getTypeName()))
             return DescriptiveMember.okStatus();
         return DescriptiveMember.newStatus(BasicDiagramStatus.TypeNameError,
                 "typeName:" + getTypeName() + " name is invalid.");

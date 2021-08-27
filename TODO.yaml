@@ -19,7 +19,17 @@ Phase1CodeGeneration:
   6: add header files(maybe phase2)
 
 Phase2CodeGeneration:
+  0: common
+    a: skip all preprocessors
+    b: skip all comments
+    c: find blocks
+    d: find expr
+    e: edit method use
+
   1: edit c files
+    a: find class definition
+    b: find
+
   2: edit cpp files
 
 test:

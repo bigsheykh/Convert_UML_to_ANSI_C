@@ -1,5 +1,6 @@
 package com.project.classBaseUML;
 
+import com.project.Phase2CodeGeneration.LexicalAnalyzer;
 import com.project.graphBaseDependency.DependencyEdge;
 import com.project.graphBaseDependency.DependencyStatus;
 import org.javatuples.Pair;
@@ -213,9 +214,9 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
 
     @Override
     public Pair<BasicDiagramStatus, LinkedList<String>> statusOfMember() {
-        if (!DescriptiveMember.isNameOkayInC(getSuperClass()))
+        if (!LexicalAnalyzer.isNameOkayInC(getSuperClass()))
             return DescriptiveMember.newStatus(BasicDiagramStatus.SuperClassNameError, "super name is invalid");
-        if (!DescriptiveMember.isNameOkayInC(getName()) || getName().equals("null"))
+        if (!LexicalAnalyzer.isNameOkayInC(getName()) || getName().equals("null"))
             return DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError, "class name is invalid");
 
         Pair<BasicDiagramStatus, LinkedList<String>> status = DescriptiveMember.statusOfVector(
@@ -234,9 +235,9 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
     @Override
     public Vector<Pair<BasicDiagramStatus, LinkedList<String>>> getAllProblems() {
         Vector<Pair<BasicDiagramStatus, LinkedList<String>>> vector = new Vector<>();
-        if (!DescriptiveMember.isNameOkayInC(getSuperClass()))
+        if (!LexicalAnalyzer.isNameOkayInC(getSuperClass()))
             vector.add(DescriptiveMember.newStatus(BasicDiagramStatus.SuperClassNameError, "super name is invalid"));
-        if (!DescriptiveMember.isNameOkayInC(getName()) || getName().equals("null"))
+        if (!LexicalAnalyzer.isNameOkayInC(getName()) || getName().equals("null"))
             vector.add(DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError, "class name is invalid"));
 
         vector.addAll(DescriptiveMember.getAllProblemsOfVector(

@@ -1,6 +1,6 @@
 package com.project.diagramGUI;
 
-import com.project.classBaseUML.DescriptiveMember;
+import com.project.Phase2CodeGeneration.LexicalAnalyzer;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -31,9 +31,9 @@ public class GUITextFieldSetter implements DocumentListener {
     }
 
     void inputChecker() {
-        if (DescriptiveMember.isNameOkayInC(textField.getText()))
+        if (LexicalAnalyzer.isNameOkayInC(textField.getText()))
             textField.setBackground(Color.GREEN);
-        else if (DescriptiveMember.isTypeOkayInC(textField.getText()))
+        else if (LexicalAnalyzer.isTypeOkayInC(textField.getText()))
             textField.setBackground(Color.getHSBColor((float) 0.75, (float) 0.5, (float) 100.0));
         else
             textField.setBackground(Color.RED);

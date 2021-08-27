@@ -10,23 +10,6 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 
 public interface DescriptiveMember {
-    String[] reservedKeyword = new String[]{"_Packed", "auto", "break",
-            "case", "const", "continue", "default",
-            "do", "else", "enum", "extern",
-            "for", "goto", "if", "register",
-            "return", "signed", "sizeof", "static",
-            "struct", "switch", "typedef", "union",
-            "unsigned", "volatile", "while"
-    };
-    String[] reservedTypes = new String[]{
-            "char", "signed char", "unsigned char",
-            "short", "short int", "signed short", "signed short int", "unsigned short", "unsigned short int",
-            "int", "signed", "signed int", "unsigned", "unsigned int",
-            "long", "long int", "signed long", "signed long int", "unsigned long", "unsigned long int",
-            "long long", "long long int", "signed long long", "signed long long int",
-            "unsigned long long", "unsigned long long int",
-            "float", "double", "long double"
-    };
 
     static <T extends DescriptiveMember> Pair<BasicDiagramStatus, LinkedList<String>> statusOfVector(
             Vector<T> vector, boolean checkSameSignature, String description, BasicDiagramStatus sameProblemStatus) {
@@ -85,33 +68,6 @@ public interface DescriptiveMember {
 
     static Pair<BasicDiagramStatus, LinkedList<String>> okStatus() {
         return new Pair<>(BasicDiagramStatus.Okay, new LinkedList<>());
-    }
-
-    static boolean isNameOkayInC(String s) {
-        if (s == null)
-            return false;
-        return Pattern.matches("[_a-zA-Z][_a-zA-Z0-9]*", s) && !Arrays.asList(reservedKeyword).contains(s)
-                && !Arrays.asList(reservedTypes).contains(s);
-    }
-
-    static String unRegister(String s) {
-        String register = "register ";
-        if (s.length() < register.length() || !s.startsWith(register))
-            return s;
-        return s.substring(register.length());
-    }
-
-    static String unStruct(String s) {
-        String struct = "struct ";
-        if (s.length() < struct.length() || !s.startsWith(struct))
-            return s;
-        return s.substring(struct.length());
-    }
-
-    static boolean isTypeOkayInC(String s) {
-        if (s == null)
-            return false;
-        return isNameOkayInC(unRegister(unStruct(s))) || Arrays.asList(reservedTypes).contains(unRegister(s));
     }
 
     Element getElementDocument();

@@ -1,5 +1,6 @@
 package com.project.classBaseUML;
 
+import com.project.Phase2CodeGeneration.LexicalAnalyzer;
 import org.javatuples.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -155,7 +156,7 @@ public class ClassMethod<TType extends ValueType, T extends ClassAttribute<TType
         Pair<BasicDiagramStatus, LinkedList<String>> pair = getReturnValueType().statusOfMember();
         if (pair.getValue0() != BasicDiagramStatus.Okay)
             return DescriptiveMember.addDescriptionStatus(pair, "method's: value type->");
-        if (!DescriptiveMember.isNameOkayInC(getName()))
+        if (!LexicalAnalyzer.isNameOkayInC(getName()))
             return DescriptiveMember.newStatus(BasicDiagramStatus.MethodNameError,
                     "method:" + getName() + " name is invalid.");
         return DescriptiveMember.okStatus();
@@ -166,7 +167,7 @@ public class ClassMethod<TType extends ValueType, T extends ClassAttribute<TType
         Vector<Pair<BasicDiagramStatus, LinkedList<String>>> vector =
                 new Vector<>(DescriptiveMember.getAllProblemsOfVector(
                         getParams(), true, "parameter", BasicDiagramStatus.SameParameterName));
-        if (!DescriptiveMember.isNameOkayInC(getName()))
+        if (!LexicalAnalyzer.isNameOkayInC(getName()))
             vector.add(DescriptiveMember.newStatus(BasicDiagramStatus.TypeNameError,
                     "method:" + getName() + " name is invalid."));
         vector.addAll(DescriptiveMember.addDescriptionStatus(getReturnValueType().getAllProblems(),
