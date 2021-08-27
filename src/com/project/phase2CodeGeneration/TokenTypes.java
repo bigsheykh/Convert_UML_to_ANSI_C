@@ -25,6 +25,8 @@ public enum TokenTypes {
 
     RESERVED_KEYWORD,
     SIZEOF,
+    MALLOC,
+    NEW,
 
     DOUBLE_COLON,
     SEMI_COLON,

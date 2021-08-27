@@ -256,6 +256,60 @@ public class LexicalAnalyzer {
                 case "ELLIPSIS":
                     tokenType = TokenTypes.ELLIPSIS;
                     break;
+                case "MALLOC":
+                    tokenType = TokenTypes.MALLOC;
+                    break;
+                case "NEW":
+                    tokenType = TokenTypes.NEW;
+                    break;
+                case "PLUS":
+                case "MINUS":
+                case "DIVIDE":
+                case "MOD":
+                case "OR":
+                case "NOT":
+                case "XOR":
+                case "LSHIFT":
+                case "RSHIFT":
+                case "LOR":
+                case "LAND":
+                case "LNOT":
+                case "LT":
+                case "LE":
+                case "GT":
+                case "GE":
+                case "EQ":
+                case "NE":
+                case "EQUALS":
+                case "TIMESEQUAL":
+                case "DIVEQUAL":
+                case "MODEQUAL":
+                case "PLUSEQUAL":
+                case "MINUSEQUAL":
+                case "LSHIFTEQUAL":
+                case "RSHIFTEQUAL":
+                case "ANDEQUAL":
+                case "XOREQUAL":
+                case "OREQUAL":
+                case "PLUSPLUS":
+                case "MINUSMINUS":
+                case "CONDOP":
+                    tokenType = TokenTypes.OPERATOR_OR_ASSIGN;
+                    break;
+                case "BREAK":
+                case "CASE":
+                case "CONTINUE":
+                case "DEFAULT":
+                case "DO":
+                case "ELSE":
+                case "FOR":
+                case "GOTO":
+                case "IF":
+                case "RETURN":
+                case "SWITCH":
+                case "WHILE":
+                    tokenType = TokenTypes.RESERVED_KEYWORD;
+                    break;
                 default:
                     tokenType = TokenTypes.UNKNOWN;
                     try {
@@ -277,7 +331,5 @@ public class LexicalAnalyzer {
         return result;
     }
 
-    //TODO type
     //TODO deleteTypeQualifier
-    //TODO Integrate with clex.py
 }
