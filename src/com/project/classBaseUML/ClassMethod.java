@@ -9,6 +9,7 @@ import org.w3c.dom.NodeList;
 import java.util.*;
 
 import static com.project.Main.document;
+import static com.project.lexicalAnalyzer.CLanguageTokens.*;
 
 public class ClassMethod<TType extends ValueType, T extends ClassAttribute<TType>> implements DescriptiveMember,
         Comparable<ClassMethod> {
@@ -192,18 +193,12 @@ public class ClassMethod<TType extends ValueType, T extends ClassAttribute<TType
     }
 
     @Override
-    public String getShowName() {
+    public String getShowName(String... className) {
         StringBuilder returnValue = new StringBuilder();
-        returnValue.append(getReturnValueType().getShowName()).append(" ").append(getName()).append("(");
-        boolean moreThanOnce = false;
-        for (ClassAttribute<?> attribute : getParams())
-            if (moreThanOnce)
-                returnValue.append(", ").append(attribute.getShowName());
-            else {
-                moreThanOnce = true;
-                returnValue.append(attribute.getShowName());
-            }
-        return returnValue + ")";
+        returnValue.append(
+                getReturnValueType().getShowName()).append(whiteSpace).append(getName());
+        returnValue.append(DescriptiveMember.generateParamsTogether(getParams(), className));
+        return returnValue.toString();
     }
 
 }

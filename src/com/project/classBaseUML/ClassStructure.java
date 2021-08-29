@@ -255,7 +255,7 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
     }
 
     @Override
-    public String getShowName() {
+    public String getShowName(String... className) {
         return getName();
     }
 

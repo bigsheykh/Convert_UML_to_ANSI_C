@@ -71,7 +71,7 @@ public class ClassDiagram<TType extends ValueType, TAttribute extends ClassAttri
     }
 
     @Override
-    public String getShowName() {
+    public String getShowName(String... className) {
         return "";
     }
 

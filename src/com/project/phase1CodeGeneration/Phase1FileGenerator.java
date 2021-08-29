@@ -1,14 +1,18 @@
 package com.project.phase1CodeGeneration;
 
+import com.project.classBaseUML.ClassAttribute;
+import com.project.classBaseUML.DescriptiveMember;
+import com.project.classBaseUML.ValueType;
+
 import java.io.*;
 import java.util.Vector;
 
 import static com.project.lexicalAnalyzer.CLanguageTokens.*;
 
+///TODO delete this and move all functions into Complete* classes
 public class Phase1FileGenerator {
 
     boolean successFull;
-
 
     public Phase1FileGenerator(CompleteDiagram diagram)
     {
@@ -89,38 +93,42 @@ public class Phase1FileGenerator {
         allLines.append(newLine);
         allLines.append(generateIncludeClassHeader("AllClasses.h"));//TODO replace AllClasses.h with a PSVSf
         allLines.append(newLine);
-        allLines.append(generateIncludesForAClass(completeClass.getParents()));
+        allLines.append(generateIncludesForAClass(completeClass.getParents(), completeClass.getName()));
         allLines.append(newLine);
         allLines.append(newLine);
 
-        allLines.append(generateUnionDefinitions(completeClass));
+        allLines.append(generateUnionDefinitions(completeClass, completeClass.getName()));
         allLines.append(newLine);
         allLines.append(generateMethodDefinitions(completeClass.getAllMethods(), completeClass.getName()));
-        //TODO add constructors
+        allLines.append(newLine);
+        allLines.append(generateConstructorDefinitions(completeClass.getConstructors(), completeClass.getName()));
+        allLines.append(newLine);
+        allLines.append(generateDestructorDefinition(completeClass.getName()));
         allLines.append(newLine);
 
         allLines.append(generateEndGuard());
         return allLines.toString();
     }
 
-    private String generateIncludesForAClass(Vector<String> classes)
+    private String generateIncludesForAClass(Vector<String> classes, String theClassName)
     {
         StringBuilder allLines = new StringBuilder();
         for(String className:classes)
-            allLines.append(generateIncludeClassHeader(generateHeaderName(className)));
+            if(!className.equals(theClassName))
+                allLines.append(generateIncludeClassHeader(generateHeaderName(className)));
         return allLines.toString();
     }
 
-    private String generateUnionDefinitions(CompleteClass completeClass)
+    private String generateUnionDefinitions(CompleteClass completeClass, String className)
     {
         StringBuilder allLines = new StringBuilder();
-        allLines.append(union + whiteSpace + completeClass.getName() + newLine + openCurlyBracket);
-        allLines.append(generateUnionUsage(completeClass.getParents()));// TODO: except itself
+        allLines.append(union + whiteSpace).append(completeClass.getName()).append(newLine).append(openCurlyBracket);
+        allLines.append(generateUnionUsage(completeClass.getParents(), className));
 
         allLines.append(tab + struct + newLine);
         allLines.append(tab + openCurlyBracket + newLine);
         for(CompleteAttribute attribute:completeClass.getAllAttributes())
-            allLines.append(tab + tab + attribute.getShowName() + semiColon + newLine);
+            allLines.append(tab + tab).append(attribute.getShowName()).append(semiColon).append(newLine);
         allLines.append(tab + closeCurlyBracket);
         allLines.append(newLine);
 
@@ -133,9 +141,58 @@ public class Phase1FileGenerator {
     {
         StringBuilder allLines = new StringBuilder();
         for(CompleteMethod method:methods)
-            allLines.append(method.getShowName().replace(openParenthesis,//TODO :change replace rule for param size = 0
-                    openParenthesis + union + whiteSpace +  className + whiteSpace + comma)).append(newLine);
+            allLines.append(generateMethodDefinition(method, className)).append(semiColon).append(newLine);
         return allLines.toString();
+    }
+
+    private String generateMethodDefinition(CompleteMethod method, String className)
+    {
+        StringBuilder allLines = new StringBuilder();
+        allLines.append(method.getShowName(generateAttributeThis(className)).replace(openParenthesis,
+                openParenthesis + union + whiteSpace +  className + whiteSpace + comma));
+        return allLines.toString();
+    }
+
+    private String generateDestructorDefinition(String className)
+    {
+        return generateDestructorName(className) +
+                DescriptiveMember.generateParamsTogether(new Vector<>(), generateAttributeThis(className)) +
+                newLine + semiColon;
+    }
+
+    private String generateConstructorDefinitions(Vector<CompleteConstructor> constructors, String className)
+    {
+        StringBuilder allLines = new StringBuilder();
+        for(CompleteConstructor constructor:constructors)
+            allLines.append(generateConstructorDefinition(constructor, className)).append(semiColon).append(newLine);
+        return allLines.toString();
+    }
+
+    private String generateAttributeThis(String className)
+    {
+        ValueType valueType = new ValueType(union + whiteSpace + className, 1);
+        ClassAttribute<ValueType> attribute = new ClassAttribute<>(valueType, thisKeyword);
+        CompleteAttribute completeAttribute = new CompleteAttribute(attribute);
+        return completeAttribute.getShowName();
+    }
+
+    private String generateConstructorDefinition(CompleteConstructor constructor, String className)
+    {
+        StringBuilder allLines = new StringBuilder();
+        allLines.append(generateConstructorName(className))
+                .append(constructor.getShowName(generateAttributeThis(className).replace(openParenthesis,
+                        openParenthesis + union + whiteSpace +  className + whiteSpace + comma)));
+        return allLines.toString();
+    }
+
+    private String generateConstructorName(String className)
+    {
+        return constructor + className;
+    }
+
+    private String generateDestructorName(String className)
+    {
+        return destructor + className;
     }
 
     private String generateAllClassesHeaderFile(Vector<String> classes, String fileName)
@@ -168,11 +225,12 @@ public class Phase1FileGenerator {
         return tab + union + whiteSpace + className + whiteSpace + union + className + semiColon + newLine;
     }
 
-    private String generateUnionUsage(Vector<String> classNames)
+    private String generateUnionUsage(Vector<String> classNames, String theClassName)
     {
         StringBuilder allLines = new StringBuilder();
         for(String className:classNames)
-            allLines.append(generateOneUnionUsage(className));
+            if(!className.equals(theClassName))
+                allLines.append(generateOneUnionUsage(className));
 
         return allLines.toString();
     }

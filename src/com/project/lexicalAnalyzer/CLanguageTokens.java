@@ -57,4 +57,7 @@ public interface CLanguageTokens {
     String define = "define";
     String ifndef = "ifndef";
     String endif = "endif";
+    String thisKeyword = "this";
+    String constructor = "constructor";
+    String destructor = "destructor";
 }

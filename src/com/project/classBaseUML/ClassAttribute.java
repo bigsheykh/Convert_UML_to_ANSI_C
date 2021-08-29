@@ -119,7 +119,7 @@ public class ClassAttribute<TType extends ValueType> implements DescriptiveMembe
     }
 
     @Override
-    public String getShowName() {
+    public String getShowName(String... className) {
         return getValueType().getShowName() + " " + getName();
     }
 

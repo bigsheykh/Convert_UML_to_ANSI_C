@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 import java.util.*;
 
 import static com.project.Main.document;
+import static com.project.lexicalAnalyzer.CLanguageTokens.*;
 
 public class ClassConstructor<TType extends ValueType, T extends ClassAttribute<TType>> implements DescriptiveMember {
     Vector<T> params;
@@ -120,18 +121,8 @@ public class ClassConstructor<TType extends ValueType, T extends ClassAttribute<
     }
 
     @Override
-    public String getShowName() {
-        StringBuilder returnValue = new StringBuilder();
-        returnValue.append("(");
-        boolean moreThanOnce = false;
-        for (ClassAttribute<?> attribute : getParams())
-            if (moreThanOnce)
-                returnValue.append(", ").append(attribute.getShowName());
-            else {
-                moreThanOnce = true;
-                returnValue.append(attribute.getShowName());
-            }
-        return returnValue + ")";
+    public String getShowName(String... className) {
+        return DescriptiveMember.generateParamsTogether(getParams(), className);
     }
 
 }

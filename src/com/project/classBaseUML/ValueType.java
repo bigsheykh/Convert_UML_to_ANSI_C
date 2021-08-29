@@ -128,7 +128,7 @@ public class ValueType implements DescriptiveMember, Comparable<ValueType> {
     }
 
     @Override
-    public String getShowName() {
+    public String getShowName(String... className) {
         return  getTypeName() + "*".repeat(getNumberOfPointer());
     }
 

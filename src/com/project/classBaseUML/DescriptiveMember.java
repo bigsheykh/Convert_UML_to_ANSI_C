@@ -4,10 +4,10 @@ import org.javatuples.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Vector;
-import java.util.regex.Pattern;
+
+import static com.project.lexicalAnalyzer.CLanguageTokens.*;
 
 public interface DescriptiveMember {
 
@@ -72,6 +72,27 @@ public interface DescriptiveMember {
 
     Element getElementDocument();
 
+    static String generateParamsTogether (Vector<?> vector, String... optional)
+    {
+        StringBuilder returnValue = new StringBuilder();
+        boolean moreThanOnce = false;
+        returnValue.append(openParenthesis);
+        if(optional.length > 0)
+        {
+            moreThanOnce = true;
+            returnValue.append(optional[0]);
+        }
+        for (Object param : vector)
+            if (moreThanOnce)
+                returnValue.append(comma + whiteSpace).append(((DescriptiveMember)param).getShowName());
+            else {
+                moreThanOnce = true;
+                returnValue.append(((DescriptiveMember)param).getShowName());
+            }
+        returnValue.append(closeParenthesis);
+        return returnValue.toString();
+    }
+
     void setDataByNode(Node node);
 
     BasicDiagramStatus getStatusType();
@@ -80,5 +101,5 @@ public interface DescriptiveMember {
 
     Vector<Pair<BasicDiagramStatus, LinkedList<String>>> getAllProblems();
 
-    String getShowName();
+    String getShowName(String... className);
 }
