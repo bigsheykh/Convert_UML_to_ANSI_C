@@ -2,12 +2,14 @@ package com.project;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
 public class CommandExecutor {
     public static SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss:SSS");
+    public static String lexerCommand = "python3 src/phase2Lexer/clex.py";
 
     public static void executeCommand(String command) {
         try {
@@ -23,7 +25,7 @@ public class CommandExecutor {
 
     public static void logOutput(InputStream inputStream, String prefix) {
         new Thread(() -> {
-            Scanner scanner = new Scanner(inputStream, "UTF-8");
+            Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
             while (scanner.hasNextLine()) {
                 log(prefix + scanner.nextLine());
             }
@@ -34,6 +36,4 @@ public class CommandExecutor {
     public static synchronized void log(String message) {
         System.out.println(format.format(new Date()) + ": " + message);
     }
-
-    public static String lexerCommand = "python3 src/phase2Lexer/clex.py";
 }

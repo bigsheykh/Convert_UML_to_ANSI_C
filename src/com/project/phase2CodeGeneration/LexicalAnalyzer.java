@@ -4,7 +4,6 @@ import com.project.CommandExecutor;
 import org.javatuples.Pair;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -56,16 +55,15 @@ public class LexicalAnalyzer {
                 && !Arrays.asList(reservedTypes).contains(s) && !Arrays.asList(reservedTypeDescribers).contains(s);
     }
 
-    public static String deleteTypeQualifier(String s)
-    {
+    public static String deleteTypeQualifier(String s) {
         if (s.startsWith(constKeyword))
             return s.substring(constKeyword.length() + 1);
         if (s.startsWith(volatileKeyword))
             return s.substring(volatileKeyword.length() + 1);
         return s;
     }
-    private static String deleteClassSpecifier(String s)
-    {
+
+    private static String deleteClassSpecifier(String s) {
         if (s.startsWith(extern))
             return deleteClassSpecifier(s.substring(extern.length() + 1));
         if (s.startsWith(typedef))
@@ -87,7 +85,7 @@ public class LexicalAnalyzer {
         if (s.startsWith(classKeyword))
             return s.substring(classKeyword.length() + 1);
         if (s.startsWith(enumKeyword))
-            return s.substring(enumKeyword.length() + 1);
+            return s.substring(enumKeyword.length() + 1);//TODO edit equals mistake
 
         return s;
     }
@@ -99,24 +97,22 @@ public class LexicalAnalyzer {
                 Arrays.asList(reservedTypes).contains(deleteClassSpecifier(s));
     }
 
-    public static Vector<Pair<TokenTypes, String>> getTokensOfPhase2Files(String fileName)
-    {
+    public static Vector<Pair<TokenTypes, String>> getTokensOfPhase2Files(String fileName) {
         Vector<Pair<TokenTypes, String>> result = new Vector<>();
         String lexOutput = fileName + ".result";
         Scanner lexScanner;
         CommandExecutor.executeCommand(CommandExecutor.lexerCommand + " " + fileName + " " + lexOutput);
-        FileWriter myWriter;
+        FileWriter unknownWriter;
         try {
             lexScanner = new Scanner(new File("result/" + lexOutput));
-            myWriter = new FileWriter("filename.txt");
+            unknownWriter = new FileWriter("unknown.txt");
         } catch (IOException e) {
             e.printStackTrace();
             return result;
         }
 
         int counter = lexScanner.nextInt();
-        for (int i = 0; i < counter; i++)
-        {
+        for (int i = 0; i < counter; i++) {
             String type, value;
             try {
                 String resultBasePath = "result/" + lexOutput + i;
@@ -313,9 +309,9 @@ public class LexicalAnalyzer {
                 default:
                     tokenType = TokenTypes.UNKNOWN;
                     try {
-                        myWriter.write(type + ":" + "\n");
-                        myWriter.write(value);
-                        myWriter.write("\n");
+                        unknownWriter.write(type + ":" + "\n");
+                        unknownWriter.write(value);
+                        unknownWriter.write("\n");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -323,8 +319,8 @@ public class LexicalAnalyzer {
             result.add(new Pair<>(tokenType, value));
         }
         try {
-            myWriter.flush();
-            myWriter.close();
+            unknownWriter.flush();
+            unknownWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

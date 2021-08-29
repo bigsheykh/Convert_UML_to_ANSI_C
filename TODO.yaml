@@ -2,7 +2,9 @@ classBaseUML:
   1: SameAttributeAndMethodName
   2: SameAttributeAndClassName
   3: SameMethodAndClassName
-  4: get directory of phase1 output
+  4: add 3 probelms to array of attribute
+  5: change name lexical analize for attibute name(seperate param, function and attribute)
+  6: get directory of phase1 output
 
 diagramGUI:
   1: get directory of phase1 output
@@ -11,12 +13,7 @@ diagramGUI:
   4: redesign info getter
 
 Phase1CodeGeneration:
-  1: output classes name
-  2: output classes hierarchy*
-  3: output classes final attribute
-  4: output classes methods*
-  5: output classes final methods
-  6: add header files(maybe phase2)
+  1: add header files(maybe phase2)
 
 Phase2CodeGeneration:
   0: common

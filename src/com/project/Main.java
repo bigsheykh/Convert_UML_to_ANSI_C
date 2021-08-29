@@ -31,7 +31,8 @@ public class Main implements Runnable{
     static public Transformer transformer;
     static public GUIDiagram guiDiagram;
 
-    public static void main(String[] args) {
+    private static void lexicalAnalyzerUser()
+    {
         Vector<Pair<TokenTypes, String>> tokens = LexicalAnalyzer.getTokensOfPhase2Files("SearchEngine.c");
         FileWriter myWriter;
         try {
@@ -43,10 +44,9 @@ public class Main implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
+    }
+    public static void main(String[] args) {
+//        lexicalAnalyzerUser();
         documentFactory = DocumentBuilderFactory.newInstance();
         try {
             documentBuilder = documentFactory.newDocumentBuilder();

@@ -1,11 +1,12 @@
 package com.project.graphBaseDependency;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Vector;
 
 public class GraphOperation {
-    private HashMap<String, ClassNode> nodes;
-    private Vector<String> classNames;
-    private Vector<Vector<DependencyEdge>>[] allCycles;
+    private final HashMap<String, ClassNode> nodes;
+    private final Vector<String> classNames;
+    private final Vector<Vector<DependencyEdge>>[] allCycles;
     private int dependencyNumber;
 
     public GraphOperation(Vector<String> classNames, Vector<DependencyEdge> allDependencyEdge) {
