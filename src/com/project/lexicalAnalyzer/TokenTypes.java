@@ -1,4 +1,4 @@
-package com.project.phase2CodeGeneration;
+package com.project.lexicalAnalyzer;
 
 public enum TokenTypes {
     COMMENT,

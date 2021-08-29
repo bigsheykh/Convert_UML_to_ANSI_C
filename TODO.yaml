@@ -13,7 +13,15 @@ diagramGUI:
   4: redesign info getter
 
 Phase1CodeGeneration:
-  1: add header files(maybe phase2)
+  1: output classes name
+  2: output classes hierarchy*
+  3: output classes final attribute
+  4: output classes methods*
+  5: output classes final methods
+  0: add header files(maybe phase2)
+    a: todo bugs
+    b: constructors
+    c: destructor
 
 Phase2CodeGeneration:
   0: common

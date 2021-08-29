@@ -1,4 +1,4 @@
-package com.project.phase2CodeGeneration;
+package com.project.lexicalAnalyzer;
 
 import com.project.CommandExecutor;
 import org.javatuples.Pair;
@@ -15,77 +15,44 @@ import java.util.regex.Pattern;
 
 public class LexicalAnalyzer {
 
-    private static final String[] reservedKeyword = new String[]{
-            "_Packed", "break", "case", "continue", "default",
-            "do", "else", "enum", "for", "goto", "if", "return",
-            "signed", "sizeof", "switch", "unsigned", "while"
-    };
-
-    private static final String constKeyword = "const";
-    private static final String volatileKeyword = "volatile";
-    private static final String extern = "extern";
-    private static final String struct = "struct";
-    private static final String union = "union";
-    private static final String classKeyword = "class";
-    private static final String typedef = "typedef";
-    private static final String staticKeyword = "static";
-    private static final String auto = "auto";
-    private static final String register = "register";
-    private static final String enumKeyword = "enum";
-
-    private static final String[] reservedTypeDescribers = new String[]{
-            constKeyword, volatileKeyword, extern, struct, union,
-            classKeyword, typedef, staticKeyword, auto, register
-    };
-
-    private static final String[] reservedTypes = new String[]{
-            "char", "signed char", "unsigned char",
-            "short", "short int", "signed short", "signed short int", "unsigned short", "unsigned short int",
-            "int", "signed", "signed int", "unsigned", "unsigned int",
-            "long", "long int", "signed long", "signed long int", "unsigned long", "unsigned long int",
-            "long long", "long long int", "signed long long", "signed long long int",
-            "unsigned long long", "unsigned long long int",
-            "float", "double", "long double", "void"
-    };
-
     public static boolean isNameOkayInC(String s) {
         if (s == null)
             return false;
-        return Pattern.matches("[_a-zA-Z][_a-zA-Z0-9]*", s) && !Arrays.asList(reservedKeyword).contains(s)
-                && !Arrays.asList(reservedTypes).contains(s) && !Arrays.asList(reservedTypeDescribers).contains(s);
+        return Pattern.matches("[_a-zA-Z][_a-zA-Z0-9]*", s) && !Arrays.asList(CLanguageTokens.reservedKeyword).contains(s)
+                && !Arrays.asList(CLanguageTokens.reservedTypes).contains(s) && !Arrays.asList(CLanguageTokens.reservedTypeDescribers).contains(s);
     }
 
     public static String deleteTypeQualifier(String s) {
-        if (s.startsWith(constKeyword))
-            return s.substring(constKeyword.length() + 1);
-        if (s.startsWith(volatileKeyword))
-            return s.substring(volatileKeyword.length() + 1);
+        if (s.startsWith(CLanguageTokens.constKeyword))
+            return s.substring(CLanguageTokens.constKeyword.length() + 1);
+        if (s.startsWith(CLanguageTokens.volatileKeyword))
+            return s.substring(CLanguageTokens.volatileKeyword.length() + 1);
         return s;
     }
 
     private static String deleteClassSpecifier(String s) {
-        if (s.startsWith(extern))
-            return deleteClassSpecifier(s.substring(extern.length() + 1));
-        if (s.startsWith(typedef))
-            return deleteClassSpecifier(s.substring(typedef.length() + 1));
-        if (s.startsWith(staticKeyword))
-            return deleteClassSpecifier(s.substring(staticKeyword.length() + 1));
-        if (s.startsWith(auto))
-            return deleteClassSpecifier(s.substring(auto.length() + 1));
-        if (s.startsWith(register))
-            return deleteClassSpecifier(s.substring(register.length() + 1));
+        if (s.startsWith(CLanguageTokens.extern))
+            return deleteClassSpecifier(s.substring(CLanguageTokens.extern.length() + 1));
+        if (s.startsWith(CLanguageTokens.typedef))
+            return deleteClassSpecifier(s.substring(CLanguageTokens.typedef.length() + 1));
+        if (s.startsWith(CLanguageTokens.staticKeyword))
+            return deleteClassSpecifier(s.substring(CLanguageTokens.staticKeyword.length() + 1));
+        if (s.startsWith(CLanguageTokens.auto))
+            return deleteClassSpecifier(s.substring(CLanguageTokens.auto.length() + 1));
+        if (s.startsWith(CLanguageTokens.register))
+            return deleteClassSpecifier(s.substring(CLanguageTokens.register.length() + 1));
         return s;
     }
 
     private static String unStruct(String s) {
-        if (s.startsWith(struct))
-            return s.substring(struct.length() + 1);
-        if (s.startsWith(union))
-            return s.substring(union.length() + 1);
-        if (s.startsWith(classKeyword))
-            return s.substring(classKeyword.length() + 1);
-        if (s.startsWith(enumKeyword))
-            return s.substring(enumKeyword.length() + 1);//TODO edit equals mistake
+        if (s.startsWith(CLanguageTokens.struct))
+            return s.substring(CLanguageTokens.struct.length() + 1);
+        if (s.startsWith(CLanguageTokens.union))
+            return s.substring(CLanguageTokens.union.length() + 1);
+        if (s.startsWith(CLanguageTokens.classKeyword))
+            return s.substring(CLanguageTokens.classKeyword.length() + 1);
+        if (s.startsWith(CLanguageTokens.enumKeyword))
+            return s.substring(CLanguageTokens.enumKeyword.length() + 1);//TODO edit equals mistake
 
         return s;
     }
@@ -94,7 +61,7 @@ public class LexicalAnalyzer {
         if (s == null)
             return false;
         return isNameOkayInC(unStruct(deleteClassSpecifier(s))) ||
-                Arrays.asList(reservedTypes).contains(deleteClassSpecifier(s));
+                Arrays.asList(CLanguageTokens.reservedTypes).contains(deleteClassSpecifier(s));
     }
 
     public static Vector<Pair<TokenTypes, String>> getTokensOfPhase2Files(String fileName) {

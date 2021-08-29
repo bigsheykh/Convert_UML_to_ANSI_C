@@ -3,42 +3,12 @@ package com.project.phase1CodeGeneration;
 import java.io.*;
 import java.util.Vector;
 
+import static com.project.lexicalAnalyzer.CLanguageTokens.*;
+
 public class Phase1FileGenerator {
 
     boolean successFull;
-    private static final String openParenthesis = "(";
-    private static final String closeParenthesis = ")";
-    private static final String openCurlyBracket = "{";
-    private static final String closeCurlyBracket = "}";
-    private static final String openSquareBracket = "[";
-    private static final String closeSquareBracket = "]";
 
-    private static final String ellipsis = "...";
-    private static final String star = "*";
-    private static final String arrow = "->";
-    private static final String Dot = ".";
-    private static final String comma = ",";
-    private static final String semiColon = ";";
-    private static final String colon = ":";
-    private static final String tilde = "~";
-    private static final String doubleColon = "::";
-    private static final String destruct = "::~";
-    private static final String doubleQuotation = "\"";
-    private static final String underscore = "_";
-
-    private static final String newLine = "\n";
-    private static final String tab = "\t";
-    private static final String lineComment = "//";
-    private static final String whiteSpace = " ";
-
-    private static final String sharp = "#";
-    private static final String include = "include";
-    private static final String define = "define";
-    private static final String ifndef = "ifndef";
-    private static final String endif = "endif";
-
-    private static final String struct = "struct";
-    private static final String union = "union";
 
     public Phase1FileGenerator(CompleteDiagram diagram)
     {
@@ -209,7 +179,7 @@ public class Phase1FileGenerator {
 
     private String generateIncludeGuard(String headerFile)
     {
-        String key = underscore + headerFile.toUpperCase().replace(Dot,underscore) + underscore;
+        String key = underscore + headerFile.toUpperCase().replace(Dot, underscore) + underscore;
         return sharp + ifndef + whiteSpace + key + newLine +
                 sharp + define + whiteSpace + key + newLine;
     }
