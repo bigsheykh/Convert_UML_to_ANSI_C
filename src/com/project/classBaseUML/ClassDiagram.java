@@ -52,7 +52,7 @@ public class ClassDiagram<TType extends ValueType, TAttribute extends ClassAttri
             return status;
         Vector<String> allClasses = allClassNames();
         for (TClass tClass : getClasses())
-            if (!tClass.getSuperClass().equals("null") && !allClasses.contains(tClass.getSuperClass()))
+            if (tClass.havingSuperClass() && !allClasses.contains(tClass.getSuperClass()))
                 return DescriptiveMember.newStatus(BasicDiagramStatus.NonExistSuperClass,
                         "super Class name:" + tClass.getSuperClass() + " class name:" + tClass.getName());
         return DescriptiveMember.okStatus();
@@ -64,7 +64,7 @@ public class ClassDiagram<TType extends ValueType, TAttribute extends ClassAttri
                 getClasses(), true, "class", BasicDiagramStatus.SameClassName);
         Vector<String> allClasses = allClassNames();
         for (TClass tClass : getClasses())
-            if (!tClass.getSuperClass().equals("null") && !allClasses.contains(tClass.getSuperClass()))
+            if (tClass.havingSuperClass() && !allClasses.contains(tClass.getSuperClass()))
                 pairVector.add(DescriptiveMember.newStatus(BasicDiagramStatus.NonExistSuperClass,
                         "super Class name:" + tClass.getSuperClass() + " class name:" + tClass.getName()));
         return pairVector;

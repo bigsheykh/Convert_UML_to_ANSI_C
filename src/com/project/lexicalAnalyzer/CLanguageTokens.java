@@ -60,4 +60,6 @@ public interface CLanguageTokens {
     String thisKeyword = "this";
     String constructor = "constructor";
     String destructor = "destructor";
+    String voidKeyword = "void";
+    String returnKeyword = "return";
 }

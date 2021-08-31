@@ -25,10 +25,6 @@ public class ClassConstructor<TType extends ValueType, T extends ClassAttribute<
         return params;
     }
 
-    public void setParams(Vector<T> params) {
-        this.params = params;
-    }
-
     public Set<String> allParamTypesWithoutPointer()
     {
         Set<String> returnValue = new HashSet<>();

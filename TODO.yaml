@@ -19,19 +19,8 @@ Phase1CodeGeneration:
   3: output classes final attribute
   4: output classes methods*
   5: output classes final methods
-  0: add header files
-    a: todo bugs
-    b: edit all methods for polimorphism
-    c: decide fate of destructor
 
 Phase2CodeGeneration:
-  0: common
-    a: skip all preprocessors
-    b: skip all comments
-    c: find blocks
-    d: find expr
-    e: edit method use
-
   1: edit c files
     a: find class definition
     b: find

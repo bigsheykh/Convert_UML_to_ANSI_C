@@ -76,11 +76,6 @@ public class GUIValueType extends ValueType implements GUIListItem<GUIValueType>
     }
 
     private class NumberGetter implements ChangeListener {
-        /**
-         * set task limit for downloads
-         *
-         * @param e a ChangeEvent object
-         */
         @Override
         public void stateChanged(ChangeEvent e) {
             if ((int) numberGetter.getValue() < 0)

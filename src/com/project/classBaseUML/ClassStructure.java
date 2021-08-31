@@ -125,24 +125,12 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
         return constructors;
     }
 
-    public void setConstructors(Vector<TConstructor> constructors) {
-        this.constructors = constructors;
-    }
-
     public Vector<TAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Vector<TAttribute> attributes) {
-        this.attributes = attributes;
-    }
-
     public Vector<TMethod> getMethods() {
         return methods;
-    }
-
-    public void setMethods(Vector<TMethod> methods) {
-        this.methods = methods;
     }
 
     public boolean isHavingDestructor() {
@@ -320,9 +308,4 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
 
     }
 
-    public Vector<Pair<String, String>> getGeneratedPhase1Code(ClassStructure father)
-    {
-
-        return null;
-    }
 }

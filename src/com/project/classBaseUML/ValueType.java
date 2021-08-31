@@ -20,11 +20,6 @@ public class ValueType implements DescriptiveMember, Comparable<ValueType> {
     public ValueType() {
     }
 
-    public ValueType(String typeName) {
-        this.typeName = typeName;
-        numberOfPointer = 0;
-    }
-
     public ValueType(String typeName, int numberOfPointer) {
         this.typeName = typeName;
         this.numberOfPointer = numberOfPointer;

@@ -56,6 +56,8 @@ public class CompleteClass extends
                 for(Object method:classStructure.getMethods())
                 {
                     CompleteMethod newMethod = new CompleteMethod((ClassMethod) method);
+                    getAllMethodsBasedOnParents().
+                            removeIf(completeMethod -> completeMethod.getValue1().equals(newMethod));
                     allMethodsBasedOnParents.add(new Pair<>(className, newMethod));
                     allMethods.add(newMethod);
                 }
