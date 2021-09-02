@@ -4,7 +4,7 @@ import com.project.classBaseUML.*;
 import com.project.graphBaseDependency.GraphOperation;
 import com.project.diagramGUI.*;
 import com.project.phase1CodeGeneration.CompleteDiagram;
-import com.project.phase1CodeGeneration.Phase1FileGenerator;
+import com.project.phase1CodeGeneration.Phase1CodeGenerator;
 import com.project.lexicalAnalyzer.LexicalAnalyzer;
 import com.project.lexicalAnalyzer.TokenTypes;
 import org.javatuples.Pair;
@@ -175,7 +175,7 @@ public class Main implements Runnable{
                 if(counter %4 == 0)
                 {
                     CompleteDiagram completeDiagram = new CompleteDiagram(guiDiagram);
-                    Phase1FileGenerator fileGenerator = new Phase1FileGenerator(completeDiagram);
+                    Phase1CodeGenerator fileGenerator = new Phase1CodeGenerator(completeDiagram);
                     System.out.println("generation success:" + fileGenerator.isSuccessFull());
                 }
 

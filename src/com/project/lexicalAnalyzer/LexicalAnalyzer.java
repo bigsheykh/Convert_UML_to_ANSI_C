@@ -45,10 +45,10 @@ public class LexicalAnalyzer {
     }
 
     private static String unStruct(String s) {
-        if (s.startsWith(CLanguageTokens.struct))
-            return s.substring(CLanguageTokens.struct.length() + 1);
-        if (s.startsWith(CLanguageTokens.union))
-            return s.substring(CLanguageTokens.union.length() + 1);
+        if (s.startsWith(CLanguageTokens.structKeyword))
+            return s.substring(CLanguageTokens.structKeyword.length() + 1);
+        if (s.startsWith(CLanguageTokens.unionKeyword))
+            return s.substring(CLanguageTokens.unionKeyword.length() + 1);
         if (s.startsWith(CLanguageTokens.classKeyword))
             return s.substring(CLanguageTokens.classKeyword.length() + 1);
         if (s.startsWith(CLanguageTokens.enumKeyword))
@@ -272,6 +272,24 @@ public class LexicalAnalyzer {
                 case "SWITCH":
                 case "WHILE":
                     tokenType = TokenTypes.RESERVED_KEYWORD;
+                    break;
+                case "DELETE":
+                    tokenType = TokenTypes.DELETE;
+                    break;
+                case "PARENT":
+                    tokenType = TokenTypes.PARENT;
+                    break;
+                case "CONSTRUCTOR":
+                    tokenType = TokenTypes.CONSTRUCTOR;
+                    break;
+                case "DESTRUCTOR":
+                    tokenType = TokenTypes.DESTRUCTOR;
+                    break;
+                case "METHOD":
+                    tokenType = TokenTypes.METHOD;
+                    break;
+                case "ATTRIBUTE":
+                    tokenType = TokenTypes.ATTRIBUTE;
                     break;
                 default:
                     tokenType = TokenTypes.UNKNOWN;

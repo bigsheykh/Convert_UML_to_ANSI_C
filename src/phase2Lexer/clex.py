@@ -19,7 +19,8 @@ class Lexer:
         'AUTO', 'BREAK', 'CASE', 'CHAR', 'CONST', 'CONTINUE', 'DEFAULT', 'DO', 'DOUBLE',
         'ELSE', 'ENUM', 'EXTERN', 'FLOAT', 'FOR', 'GOTO', 'IF', 'INT', 'LONG', 'REGISTER',
         'RETURN', 'SHORT', 'SIGNED', 'SIZEOF', 'STATIC', 'STRUCT', 'SWITCH', 'TYPEDEF',
-        'UNION', 'UNSIGNED', 'VOID', 'VOLATILE', 'WHILE',  'CLASS', 'THIS' , 'MALLOC', "NEW"
+        'UNION', 'UNSIGNED', 'VOID', 'VOLATILE', 'WHILE',  'CLASS', 'THIS' , 'MALLOC', 'NEW',
+        'DELETE', 'PARENT', 'CONSTRUCTOR', 'DESTRUCTOR', 'METHOD', 'ATTRIBUTE'
     )
 
     tokens = reserved + (

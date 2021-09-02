@@ -1,3 +1,7 @@
+UI:
+  1: get type of operation
+  2: get neccery inputs
+
 classBaseUML:
   1: SameAttributeAndMethodName
   2: SameAttributeAndClassName
@@ -14,18 +18,29 @@ diagramGUI:
   4: redesign info getter
 
 Phase1CodeGeneration:
-  1: output classes name
-  2: output classes hierarchy*
-  3: output classes final attribute
-  4: output classes methods*
-  5: output classes final methods
+  1: output status if failed and when it failed (do it for first and final)
+  2: result dependency (do it for first and final)
 
 Phase2CodeGeneration:
+  0: get tokens of basic info about
   1: edit c files
-    a: find class definition
-    b: find
+    a : constructor
+     I: definiton
+     II: "new"
+    b: destructor
+      I: "delete"
+      II: }
+    c: "class" -> "union"
+    d: cast (optional)
+    e: method call
+    f: {}
+    g: ()
+    h: []
 
   2: edit cpp files
+    a: detect "this" (probably needs nothing!)
+    b: change attribute to this.attribute -->define
+    c: method call -- >define
 
 test:
   1: phase1 and 2 total

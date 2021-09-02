@@ -3,7 +3,10 @@ package com.project.phase1CodeGeneration;
 import com.project.classBaseUML.*;
 import org.javatuples.Pair;
 
+import java.util.HashSet;
 import java.util.Vector;
+
+import static com.project.lexicalAnalyzer.CLanguageTokens.*;
 
 public class CompleteClass extends
         ClassStructure<CompleteValueType, CompleteAttribute, CompleteConstructor, CompleteMethod> {
@@ -25,11 +28,37 @@ public class CompleteClass extends
         setSuperClass(structure.getSuperClass());
         setHavingDestructor(structure.isHavingDestructor());
         for(Object method:structure.getMethods())
-            getMethods().add(new CompleteMethod((ClassMethod) method));
+            getMethods().add(new CompleteMethod((ClassMethod) method, getName()));
         for(Object constructor:structure.getConstructors())
             getConstructors().add(new CompleteConstructor((ClassConstructor) constructor));
         successCode = modifyByParents(getName(), diagram.getClasses(), 1);
 
+    }
+
+    public String getPhase2Info()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append(classKeyword + colon).append(getName()).append(newLine);
+        for(String parentName:getParents())
+            if(!parentName.equals(getName()))
+                builder.append(parentKeyword + colon).append(parentName).append(newLine);
+
+        if(getConstructors().size() == 0)
+            builder.append(constructorKeyword + colon).append(0).append(newLine);
+        else
+            builder.append(constructorKeyword + colon).append(1).append(newLine);
+
+        if(isHavingDestructor())
+            builder.append(destructorKeyword + colon).append(1).append(newLine);
+        else
+            builder.append(destructorKeyword + colon).append(0).append(newLine);
+
+        for(String methodName: getAllMethodsName())
+            builder.append(methodKeyword + colon).append(methodName).append(newLine);
+
+        for(CompleteAttribute completeAttribute:getAllAttributes())
+            builder.append(attributeKeyword + colon).append(completeAttribute.getName()).append(newLine);
+        return builder.toString();
     }
 
     private boolean modifyByParents(String className, Vector diagram, int counter) {
@@ -51,11 +80,13 @@ public class CompleteClass extends
                     getAttributes().add(newAttribute); //TODO : decide to keep this line or not
                     allAttributesBasedOnParents.add(new Pair<>(className, newAttribute));
                     allAttributes.add(newAttribute);
+                    if(!className.equals(getName()))
+                        getAttributes().add(newAttribute);
                 }
 
                 for(Object method:classStructure.getMethods())
                 {
-                    CompleteMethod newMethod = new CompleteMethod((ClassMethod) method);
+                    CompleteMethod newMethod = new CompleteMethod((ClassMethod) method, getName());
                     getAllMethodsBasedOnParents().
                             removeIf(completeMethod -> completeMethod.getValue1().equals(newMethod));
                     allMethodsBasedOnParents.add(new Pair<>(className, newMethod));
@@ -92,4 +123,16 @@ public class CompleteClass extends
         return successCode;
     }
 
+    public HashSet<String> getAllMethodsName()
+    {
+        HashSet<String> names = new HashSet<>();
+        for(CompleteMethod completeMethod:getAllMethods())
+            names.add(completeMethod.getName());
+        return names;
+    }
+
+    public static String generateCastUse(String name,String parentName)
+    {
+        return name + dot + parentName;
+    }
 }

@@ -1,6 +1,5 @@
 package com.project.phase1CodeGeneration;
 
-import com.project.classBaseUML.ClassAttribute;
 import com.project.classBaseUML.DescriptiveMember;
 import com.project.classBaseUML.ValueType;
 import org.javatuples.Pair;
@@ -11,12 +10,12 @@ import java.util.Vector;
 import static com.project.lexicalAnalyzer.CLanguageTokens.*;
 
 ///TODO delete this and move all functions into Complete* classes
-public class Phase1FileGenerator {
+public class Phase1CodeGenerator {
 
     boolean successFull;
 
     /// TODO move to CompleteDiagram
-    public Phase1FileGenerator(CompleteDiagram diagram)
+    public Phase1CodeGenerator(CompleteDiagram diagram)
     {
         successFull = false;
         if(diagram.isSuccessCode())
@@ -26,12 +25,19 @@ public class Phase1FileGenerator {
                 f.mkdir();
                 f = new File("headers");
                 f.mkdir();
+                f = new File("diagram_info");
+                f.mkdir();
 
                 OutputStream headersOutputStream = new FileOutputStream("headers/AllClasses.h");
                 headersOutputStream.write(
                         generateAllClassesHeaderFile(diagram.allClassNames(),"AllClasses.h").getBytes());
                 headersOutputStream.flush();
                 headersOutputStream.close();
+                OutputStream allInfoOutputStream = new FileOutputStream("diagram_info/AllClasses.info");
+                allInfoOutputStream.write(diagram.generateClassNamesSeparatedByNewline().getBytes());
+                allInfoOutputStream.flush();
+                allInfoOutputStream.close();
+
                 for(CompleteClass completeClass:diagram.getClasses())
                 {
                     OutputStream CPPFileOutputStream =
@@ -45,6 +51,12 @@ public class Phase1FileGenerator {
                     headerFileOutputStream.write(generateClassHeaderFile(completeClass).getBytes());
                     headerFileOutputStream.flush();
                     headerFileOutputStream.close();
+
+                    OutputStream infoFileOutputStream =
+                            new FileOutputStream("diagram_info/" + completeClass.getName() + ".info");
+                    infoFileOutputStream.write(completeClass.getPhase2Info().getBytes());
+                    infoFileOutputStream.flush();
+                    infoFileOutputStream.close();
 
                 }
                 successFull = true;
@@ -63,7 +75,7 @@ public class Phase1FileGenerator {
             closeCurlyBracket + newLine + newLine;
 
     /// TODO move to CompleteMethod
-    private String generateMethod(String className, CompleteMethod method)
+    public static String generateMethod(String className, CompleteMethod method)
     {
         String baseClassName = method.getReturnValueType().getShowName() + whiteSpace + className + doubleColon;
         return baseClassName +
@@ -72,27 +84,27 @@ public class Phase1FileGenerator {
     }
 
     /// TODO move to CompleteConstructor
-    private String generateConstructor(String className, CompleteConstructor constructor)
+    public static String generateConstructor(String className, CompleteConstructor constructor)
     {
         String baseClassName = className + doubleColon + className;
         return baseClassName + constructor.getShowName() + EmptyBlock;      // TODO use @StringBuilder
     }
 
     /// TODO move to CompleteClass
-    private String generateDestructor(String className)
+    public static String generateDestructor(String className)
     {
         String baseClassName = className + destruct + className;
         return baseClassName + EmptyBlock;
     }
 
     /// TODO move to CompleteClass
-    private String generateHeaderName(String className)
+    public static String generateHeaderName(String className)
     {
         return className + "Class.h";
     }
 
     /// TODO move to CompleteClass
-    private String generateClassHeaderFile(CompleteClass completeClass)
+    public static String generateClassHeaderFile(CompleteClass completeClass)
     {
         StringBuilder allLines = new StringBuilder();
         String fileName = generateHeaderName(completeClass.getName());
@@ -122,7 +134,7 @@ public class Phase1FileGenerator {
     }
 
     /// TODO move to CompleteClass
-    private String generateIncludesForAClass(Vector<String> classes, String theClassName)
+    public static String generateIncludesForAClass(Vector<String> classes, String theClassName)
     {
         StringBuilder allLines = new StringBuilder();
         for(String className:classes)
@@ -132,13 +144,13 @@ public class Phase1FileGenerator {
     }
 
     /// TODO move to CompleteClass
-    private String generateUnionDefinitions(CompleteClass completeClass, String className)
+    public static String generateUnionDefinitions(CompleteClass completeClass, String className)
     {
         StringBuilder allLines = new StringBuilder();
-        allLines.append(union + whiteSpace).append(completeClass.getName()).append(newLine).append(openCurlyBracket);
+        allLines.append(unionKeyword + whiteSpace).append(completeClass.getName()).append(newLine).append(openCurlyBracket);
         allLines.append(generateUnionUsage(completeClass.getParents(), className));
 
-        allLines.append(tab + struct + newLine);
+        allLines.append(tab + structKeyword + newLine);
         allLines.append(tab + openCurlyBracket + newLine);
         for(CompleteAttribute attribute:completeClass.getAllAttributes())
             allLines.append(tab + tab).append(attribute.getShowName()).append(semiColon).append(newLine);
@@ -151,7 +163,7 @@ public class Phase1FileGenerator {
     }
 
     /// TODO move to CompleteClass
-    private String generateMethodDefinitions(Vector<Pair<String, CompleteMethod>> methods, String className)
+    public static String generateMethodDefinitions(Vector<Pair<String, CompleteMethod>> methods, String className)
     {
         StringBuilder allLines = new StringBuilder();
         for(Pair<String, CompleteMethod> method:methods)
@@ -162,45 +174,30 @@ public class Phase1FileGenerator {
             else
             {
                 allLines.append(newLine);
-                allLines.append(generateMethodUseInDefinition(method.getValue1(),method.getValue0()));
+                allLines.append(method.getValue1().generateMethodUseInDefinition());
             }
         }
         return allLines.toString();
     }
 
     /// TODO move to CompleteMethod
-    private String generateMethodUseInDefinition(CompleteMethod method, String className)
+    public static String generateMethodDefinition(CompleteMethod method, String className)
     {
         StringBuilder allLines = new StringBuilder();
-        allLines.append(openCurlyBracket);
-        allLines.append(newLine).append(tab);
-        if(!method.getReturnValueType().equals(new ValueType(voidKeyword, 0)))
-            allLines.append(returnKeyword).append(whiteSpace);
-        allLines.append(method.getName()).
-                append(DescriptiveMember.generateParamsTogether(method.getParams(), generateAttributeThis(className)));
-        allLines.append(semiColon).append(newLine).append(closeCurlyBracket).append(newLine);
-        return allLines.toString();
-    }
-
-    /// TODO move to CompleteMethod
-    private String generateMethodDefinition(CompleteMethod method, String className)
-    {
-        StringBuilder allLines = new StringBuilder();
-        allLines.append(method.getShowName(generateAttributeThis(className)).replace(openParenthesis,
-                openParenthesis + union + whiteSpace +  className + whiteSpace + comma));
+        allLines.append(method.getShowName(CompleteAttribute.generateAttributeThisText(className)));
         return allLines.toString();
     }
 
     /// TODO move to CompleteClass
-    private String generateDestructorDefinition(String className)
+    public static String generateDestructorDefinition(String className)
     {
         return generateDestructorName(className) +
-                DescriptiveMember.generateParamsTogether(new Vector<>(), generateAttributeThis(className)) +
-                newLine + semiColon;
+                DescriptiveMember.generateParamsTogether(new Vector<>()
+                        , CompleteAttribute.generateAttributeThisText(className)) + semiColon + newLine ;
     }
 
     /// TODO move to CompleteClass
-    private String generateConstructorDefinitions(Vector<CompleteConstructor> constructors, String className)
+    public static String generateConstructorDefinitions(Vector<CompleteConstructor> constructors, String className)
     {
         StringBuilder allLines = new StringBuilder();
         for(CompleteConstructor constructor:constructors)
@@ -208,39 +205,30 @@ public class Phase1FileGenerator {
         return allLines.toString();
     }
 
-    /// TODO move to CompleteAttribute
-    private String generateAttributeThis(String className)
-    {
-        ValueType valueType = new ValueType(union + whiteSpace + className, 1);
-        ClassAttribute<ValueType> attribute = new ClassAttribute<>(valueType, thisKeyword);
-        CompleteAttribute completeAttribute = new CompleteAttribute(attribute);
-        return completeAttribute.getShowName();
-    }
-
     // TODO move to CompleteConstructor
-    private String generateConstructorDefinition(CompleteConstructor constructor, String className)
+    public static String generateConstructorDefinition(CompleteConstructor constructor, String className)
     {
         StringBuilder allLines = new StringBuilder();
         allLines.append(generateConstructorName(className))
-                .append(constructor.getShowName(generateAttributeThis(className).replace(openParenthesis,
-                        openParenthesis + union + whiteSpace +  className + whiteSpace + comma)));
+                .append(constructor.getShowName(CompleteAttribute.generateAttributeThisText(className).replace(openParenthesis,
+                        openParenthesis + unionKeyword + whiteSpace +  className + whiteSpace + comma)));
         return allLines.toString();
     }
 
     /// TODO move to CompleteConstructor
-    private String generateConstructorName(String className)
+    public static String generateConstructorName(String className)
     {
-        return constructor + className;
+        return constructorKeyword + className;
     }
 
     /// TODO move to CompleteClass
-    private String generateDestructorName(String className)
+    public static String generateDestructorName(String className)
     {
-        return destructor + className;
+        return destructorKeyword + className;
     }
 
     /// TODO move to CompleteDiagram
-    private String generateAllClassesHeaderFile(Vector<String> classes, String fileName)
+    public static String generateAllClassesHeaderFile(Vector<String> classes, String fileName)
     {
         StringBuilder allLines = new StringBuilder();
         allLines.append(generateIncludeGuard(fileName));
@@ -252,13 +240,13 @@ public class Phase1FileGenerator {
     }
 
     /// TODO move to CompleteClass
-    private String generateOneInlineDefinitionOfClass(String className)
+    public static String generateOneInlineDefinitionOfClass(String className)
     {
-        return union + whiteSpace + className + semiColon;
+        return unionKeyword + whiteSpace + className + semiColon;
     }
 
     /// TODO move to CompleteClass
-    private String generateInlineDefinitionOfClass(Vector<String> classNames)
+    public static String generateInlineDefinitionOfClass(Vector<String> classNames)
     {
         StringBuilder allLines = new StringBuilder();
         for(String className:classNames)
@@ -268,13 +256,13 @@ public class Phase1FileGenerator {
     }
 
     /// TODO move to CompleteClass
-    private String generateOneUnionUsage(String className)
+    public static String generateOneUnionUsage(String className)
     {
-        return tab + union + whiteSpace + className + whiteSpace + union + className + semiColon + newLine;
+        return tab + unionKeyword + whiteSpace + className + whiteSpace + unionKeyword + className + semiColon + newLine;
     }
 
     /// TODO move to CompleteClass
-    private String generateUnionUsage(Vector<String> classNames, String theClassName)
+    public static String generateUnionUsage(Vector<String> classNames, String theClassName)
     {
         StringBuilder allLines = new StringBuilder();
         for(String className:classNames)
@@ -285,27 +273,27 @@ public class Phase1FileGenerator {
     }
 
     /// TODO move to CompleteClass
-    private String generateIncludeGuard(String headerFile)
+    public static String generateIncludeGuard(String headerFile)
     {
-        String key = underscore + headerFile.toUpperCase().replace(Dot, underscore) + underscore;
+        String key = underscore + headerFile.toUpperCase().replace(dot, underscore) + underscore;
         return sharp + ifndef + whiteSpace + key + newLine +
-                sharp + define + whiteSpace + key + newLine;
+                sharp + defineKeyword + whiteSpace + key + newLine;
     }
 
     /// TODO move to CompleteClass
-    private String generateEndGuard()
+    public static String generateEndGuard()
     {
         return sharp + endif + newLine;
     }
 
     /// TODO move to CompleteClass
-    private String generateIncludeClassHeader(String headerFile)
+    public static String generateIncludeClassHeader(String headerFile)
     {
-        return sharp + include + whiteSpace + doubleQuotation + headerFile + doubleQuotation + newLine;
+        return sharp + includeKeyword + whiteSpace + doubleQuotation + headerFile + doubleQuotation + newLine;
     }
 
     /// TODO move to CompleteClass
-    private String generateClassCPP(CompleteClass completeClass)
+    public static String generateClassCPP(CompleteClass completeClass)
     {
         StringBuilder base = new StringBuilder();
         for(CompleteConstructor constructor:completeClass.getConstructors())

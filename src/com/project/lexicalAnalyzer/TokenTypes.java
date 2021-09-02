@@ -27,6 +27,13 @@ public enum TokenTypes {
     SIZEOF,
     MALLOC,
     NEW,
+    DELETE,
+
+    PARENT,
+    CONSTRUCTOR,
+    DESTRUCTOR,
+    METHOD,
+    ATTRIBUTE,
 
     DOUBLE_COLON,
     SEMI_COLON,

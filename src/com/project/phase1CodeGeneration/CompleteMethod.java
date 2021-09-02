@@ -2,13 +2,38 @@ package com.project.phase1CodeGeneration;
 
 import com.project.classBaseUML.ClassAttribute;
 import com.project.classBaseUML.ClassMethod;
+import com.project.classBaseUML.DescriptiveMember;
+import com.project.classBaseUML.ValueType;
+
+import static com.project.lexicalAnalyzer.CLanguageTokens.*;
 
 public class CompleteMethod extends ClassMethod<CompleteValueType, CompleteAttribute> {
-    public CompleteMethod(ClassMethod method) {
+
+    private final String className;
+    public CompleteMethod(ClassMethod method, String className) {
         super();
+        this.className = className;
         for(Object param:method.getParams())
             getParams().add(new CompleteAttribute((ClassAttribute) param));
         setName(method.getName());
         setReturnValueType(new CompleteValueType(method.getReturnValueType()));
     }
+
+    public String generateMethodUseInDefinition()
+    {
+        StringBuilder allLines = new StringBuilder();
+        allLines.append(openCurlyBracket);
+        allLines.append(newLine).append(tab);
+        if(!getReturnValueType().equals(new ValueType(voidKeyword, 0)))
+            allLines.append(returnKeyword).append(whiteSpace);
+        allLines.append(getName());
+        allLines.append(openParenthesis);
+        allLines.append(thisKeyword);
+        for(CompleteAttribute completeAttribute:getParams())
+            allLines.append(comma).append(whiteSpace).append(completeAttribute.getName());
+        allLines.append(closeParenthesis);
+        allLines.append(semiColon).append(newLine).append(closeCurlyBracket).append(newLine);
+        return allLines.toString();
+    }
+
 }
