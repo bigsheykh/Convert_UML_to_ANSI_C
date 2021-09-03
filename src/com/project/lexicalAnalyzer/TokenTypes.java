@@ -55,5 +55,10 @@ public enum TokenTypes {
     OPEN_SQUARE_BRACKET,
     CLOSE_SQUARE_BRACKET,
 
+    IGNORE,
+    SEPARATOR,
+    TYPE_DETAIL,
+    TYPE_SPECIFIER,
+    CLASS_TYPE,
     UNKNOWN
 }

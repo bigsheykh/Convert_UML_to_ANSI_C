@@ -6,6 +6,7 @@ import com.project.diagramGUI.*;
 import com.project.phase1CodeGeneration.*;
 import com.project.lexicalAnalyzer.*;
 import com.project.phase2CodeGeneration.DiagramInfo;
+import com.project.phase2CodeGeneration.Phase2CodeGenerator;
 import org.javatuples.Pair;
 import org.w3c.dom.*;
 import org.xml.sax.*;
@@ -92,8 +93,39 @@ public class Main implements Runnable{
             generateInfoForXML(args[3]);
         else
         {
-            String headers = "";
-            String diagramInfo = "diagram_info";
+            String diagramInfoDirectory = "diagram_info";
+            String phase1Directory = "phase1";
+            String otherCFiles = "c_files";
+            String headers = "headers";
+            for(int i = 1; i < args.length ; i += 2)
+                switch (args[i])
+                {
+                    case "-i":
+                    case "-info":
+                    case "-I":
+                        diagramInfoDirectory = args[i + 1];
+                        break;
+                    case "-p1":
+                    case "-P1":
+                    case "-phase1":
+                        phase1Directory = args[i + 1];
+                        break;
+                    case "-c":
+                    case "-C":
+                        otherCFiles = args[i + 1];
+                        break;
+                    case "-h":
+                    case "-H":
+                    case "-headers":
+                        headers = args[i + 1];
+                        break;
+                    default:
+                        System.out.println(args[i] + " is illegal");
+                        return;
+                }
+            Phase2CodeGenerator phase2 =
+                    new Phase2CodeGenerator(diagramInfoDirectory, phase1Directory, otherCFiles, headers);
+
         }
     }
 
