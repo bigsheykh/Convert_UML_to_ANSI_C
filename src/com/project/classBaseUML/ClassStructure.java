@@ -13,9 +13,9 @@ import static com.project.Main.document;
 public class ClassStructure<TType extends ValueType, TAttribute extends ClassAttribute<TType>
         , TConstructor extends ClassConstructor<TType, TAttribute>,
         TMethod extends ClassMethod<TType, TAttribute>> implements DescriptiveMember {
-    private Vector<TConstructor> constructors = new Vector<>();
-    private Vector<TAttribute> attributes = new Vector<>();
-    private Vector<TMethod> methods = new Vector<>();
+    private final Vector<TConstructor> constructors = new Vector<>();
+    private final Vector<TAttribute> attributes = new Vector<>();
+    private final Vector<TMethod> methods = new Vector<>();
     private boolean havingDestructor = false;
     private String superClass = "null";
     private String name;

@@ -28,7 +28,8 @@ public class CompleteMethod extends ClassMethod<CompleteValueType, CompleteAttri
             allLines.append(returnKeyword).append(whiteSpace);
         allLines.append(getName());
         allLines.append(openParenthesis);
-        allLines.append(and).append(openParenthesis).append(thisKeyword).append(arrow).append(parentClassName)
+        allLines.append(and).append(openParenthesis)
+                .append(thisKeyword).append(arrow).append(unionKeyword).append(parentClassName)
                 .append(closeParenthesis);
         for(CompleteAttribute completeAttribute:getParams())
             allLines.append(comma).append(whiteSpace).append(completeAttribute.getName());

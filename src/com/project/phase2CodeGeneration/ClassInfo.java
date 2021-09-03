@@ -87,5 +87,4 @@ public class ClassInfo {
     public HashSet<String> getParents() {
         return parents;
     }
-
 }

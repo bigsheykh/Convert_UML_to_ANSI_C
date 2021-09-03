@@ -74,8 +74,6 @@ public class LexicalAnalyzer {
             File resultFile = new File("result/" + lexOutput);
             int counter = 10000;
             while (!resultFile.exists() && counter > 0) counter--;
-            System.out.println("counter:");
-            System.out.println(counter);
             lexScanner = new Scanner(resultFile);
             unknownWriter = new FileWriter("unknown.txt");
         } catch (IOException e) {

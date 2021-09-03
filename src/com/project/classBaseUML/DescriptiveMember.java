@@ -1,11 +1,15 @@
 package com.project.classBaseUML;
 
 import org.javatuples.Pair;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
+import org.xml.sax.*;
 
-import java.util.LinkedList;
-import java.util.Vector;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
+import java.util.*;
 
 import static com.project.lexicalAnalyzer.CLanguageTokens.*;
 
@@ -68,6 +72,34 @@ public interface DescriptiveMember {
 
     static Pair<BasicDiagramStatus, LinkedList<String>> okStatus() {
         return new Pair<>(BasicDiagramStatus.Okay, new LinkedList<>());
+    }
+
+    static String getXml(Document document)
+    {
+        DOMSource domSource = new DOMSource(document);
+        StringWriter writer = new StringWriter();
+        StreamResult streamResult = new StreamResult(writer);
+        try {
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer transformer = factory.newTransformer();
+            transformer.transform(domSource, streamResult);
+        } catch (TransformerException e) {
+            e.printStackTrace();
+            return "";
+        }
+        return writer.toString();
+    }
+
+    static Document getDocumentFromXML(String xmlString)
+    {
+        DocumentBuilderFactory ourDocumentFactory = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder ourDocumentBuilder = ourDocumentFactory.newDocumentBuilder();
+            return  ourDocumentBuilder.parse(new InputSource(new StringReader(xmlString)));
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     Element getElementDocument();

@@ -3,23 +3,20 @@ package com.project;
 import com.project.classBaseUML.*;
 import com.project.graphBaseDependency.GraphOperation;
 import com.project.diagramGUI.*;
-import com.project.phase1CodeGeneration.CompleteDiagram;
-import com.project.phase1CodeGeneration.Phase1CodeGenerator;
-import com.project.lexicalAnalyzer.LexicalAnalyzer;
-import com.project.lexicalAnalyzer.TokenTypes;
+import com.project.phase1CodeGeneration.*;
+import com.project.lexicalAnalyzer.*;
 import com.project.phase2CodeGeneration.DiagramInfo;
 import org.javatuples.Pair;
 import org.w3c.dom.*;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import org.xml.sax.*;
 
 import javax.swing.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 import static java.lang.Thread.sleep;
@@ -31,6 +28,7 @@ public class Main implements Runnable{
     static private JFrame frame;
     static public Transformer transformer;
     static public GUIDiagram guiDiagram;
+    static private int counter = 0;
 
     private static void lexicalAnalyzerUser()
     {
@@ -46,8 +44,61 @@ public class Main implements Runnable{
             e.printStackTrace();
         }
     }
+
+    private static void generateInfoForXML(String fileName)
+    {
+        String xmlString;
+        try {
+            xmlString = Files.readString(Path.of(fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Document generatedDocument = DescriptiveMember.getDocumentFromXML(xmlString);
+        ClassDiagram diagram = new ClassDiagram();
+        diagram.setDataByNode(generatedDocument.getDocumentElement());
+        BasicDiagramStatus status = diagram.getStatusType();
+        System.out.println("code:" + status.getBasicDiagramStatusCode());
+        System.out.println("type:" + status);
+        System.out.println(diagram.getAllProblems());
+
+        if(diagram.getStatusType() == BasicDiagramStatus.Okay)
+        {
+            System.out.println();
+            GraphOperation result = diagram.getResultOfGraphOperation();
+            System.out.println("Dependency Number:" + result.getDependencyNumber());
+            System.out.println(Arrays.toString(result.getAllCycles()));
+            System.out.println();
+            if(result.getDependencyNumber() != 0)
+            {
+                CompleteDiagram completeDiagram = new CompleteDiagram(diagram);
+                Phase1CodeGenerator fileGenerator = new Phase1CodeGenerator(completeDiagram);
+                System.out.println("generation success:" + fileGenerator.isSuccessFull());
+//                DiagramInfo diagramInfo = new DiagramInfo("diagram_info");
+//                if(diagramInfo.isSuccessful())
+//                    System.out.println(diagramInfo);
+            }
+        }
+
+
+    }
+
     public static void main(String[] args) {
 //        lexicalAnalyzerUser();
+        if(args.length < 2 || args[2].startsWith("-gui"))
+            initializeGUI();
+        else if(args[2].startsWith("-xml"))
+            generateInfoForXML(args[3]);
+        else
+        {
+            String headers = "";
+            String diagramInfo = "diagram_info";
+        }
+    }
+
+    public static void initializeGUI()
+    {
         documentFactory = DocumentBuilderFactory.newInstance();
         try {
             documentBuilder = documentFactory.newDocumentBuilder();
@@ -57,13 +108,6 @@ public class Main implements Runnable{
         }
         document = documentBuilder.newDocument();
 
-        DiagramGetter t = new DiagramGetter();
-        t.init();
-
-        ClassStructure<ValueType, ClassAttribute<ValueType>, ClassConstructor<ValueType, ClassAttribute<ValueType>>,
-                ClassMethod<ValueType, ClassAttribute<ValueType>>> structure =
-                new ClassStructure<>();
-//        structure.getAttributes().add((ClassAttribute<ValueType>) attribute);
         frame = new JFrame();
         GridLayout a = new GridLayout(1,2);
         a.setVgap(50);
@@ -77,115 +121,66 @@ public class Main implements Runnable{
         frame.setVisible(true);
         frame.pack();
         new Thread(new Main()).start();
-        structure.setName("Biggy");
-        document.appendChild(structure.getElementDocument());
-
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        try {
-            transformer = transformerFactory.newTransformer();
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-            return;
-        }
-        DOMSource domSource = new DOMSource(document);
-        StringWriter writer = new StringWriter();
-
-        StreamResult streamResult = new StreamResult(writer);
-        try {
-            transformer.transform(domSource, streamResult);
-        } catch (TransformerException e) {
-            e.printStackTrace();
-            return;
-        }
-        System.out.println(writer);
-        System.out.println(writer);
-
-        try {
-            documentFactory = DocumentBuilderFactory.newInstance();
-            documentBuilder = documentFactory.newDocumentBuilder();
-            document = documentBuilder.parse(new InputSource(new StringReader(writer.toString())));
-            System.out.println(document.getDocumentElement().getClass());
-        } catch (SAXException | IOException | ParserConfigurationException e) {
-            e.printStackTrace();
-        }
 
     }
-    public String getXml(Document document)
+
+    private static void loopOnGUI()
     {
-        DOMSource domSource = new DOMSource(document);
-        StringWriter writer = new StringWriter();
-        StreamResult streamResult = new StreamResult(writer);
-        try {
-            transformer.transform(domSource, streamResult);
-        } catch (TransformerException e) {
-            e.printStackTrace();
-            return "";
-        }
-        return writer.toString();
-    }
+        counter += 1;
+        if(counter % 15 == 0)
+        {
+            BasicDiagramStatus status = guiDiagram.getStatusType();
+            System.out.println("code:" + status.getBasicDiagramStatusCode());
+//                System.out.println("type:" + status);
+//                System.out.println(guiDiagram.getAllProblems());
 
+            if(status == BasicDiagramStatus.Okay)
+            {
+                System.out.println();
+                GraphOperation result = guiDiagram.getResultOfGraphOperation();
+                System.out.println("Dependency Number:" + result.getDependencyNumber());
+//                    System.out.println(Arrays.toString(result.getAllCycles()));
+//                    System.out.println();
+                if(counter %4 == 0 && result.getDependencyNumber() != 0)
+                {
+                    CompleteDiagram completeDiagram = new CompleteDiagram(guiDiagram);
+                    Phase1CodeGenerator fileGenerator = new Phase1CodeGenerator(completeDiagram);
+                    System.out.println("generation success:" + fileGenerator.isSuccessFull());
+                    DiagramInfo diagramInfo = new DiagramInfo("diagram_info");
+                    if(diagramInfo.isSuccessful())
+                        System.out.println(diagramInfo);
+                }
+            }
+
+            try {
+                document = documentBuilder.newDocument();
+                document.appendChild(guiDiagram.getElementDocument());
+                String writer = DescriptiveMember.getXml(document);
+
+                if(status == BasicDiagramStatus.Okay)
+                    if(guiDiagram.getResultOfGraphOperation().getDependencyNumber() != 0)
+                    {
+                        OutputStream xmlOutputStream = new FileOutputStream("diagram_detail.xml");
+                        xmlOutputStream.write(writer.getBytes());
+                        xmlOutputStream.flush();
+                        xmlOutputStream.close();
+                    }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
     @Override
     public void run() {
-        int counter = 0;
         do {
             try {
                 sleep(1999);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            counter += 1;
-            if(counter % 15 == 0)
-            {
-                BasicDiagramStatus status = guiDiagram.getStatusType();
-                System.out.println("code:" + status.getBasicDiagramStatusCode());
-//                System.out.println("type:" + status);
-//                System.out.println(guiDiagram.getAllProblems());
-
-                if(status == BasicDiagramStatus.Okay)
-                {
-                    System.out.println();
-                    GraphOperation result = guiDiagram.getResultOfGraphOperation();
-                    System.out.println("Dependency Number:" + result.getDependencyNumber());
-//                    System.out.println(Arrays.toString(result.getAllCycles()));
-//                    System.out.println();
-
-                    if(counter %4 == 0 && result.getDependencyNumber() != 0)
-                    {
-                        CompleteDiagram completeDiagram = new CompleteDiagram(guiDiagram);
-                        Phase1CodeGenerator fileGenerator = new Phase1CodeGenerator(completeDiagram);
-                        System.out.println("generation success:" + fileGenerator.isSuccessFull());
-                        DiagramInfo diagramInfo = new DiagramInfo("diagram_info");
-                        if(diagramInfo.isSuccessful())
-                            System.out.println(diagramInfo);
-                    }
-
-                }
-
-                document = documentBuilder.newDocument();
-                document.appendChild(guiDiagram.getElementDocument());
-                try {
-                    String writer = getXml(document);
-                    documentFactory = DocumentBuilderFactory.newInstance();
-                    documentBuilder = documentFactory.newDocumentBuilder();
-
-                    System.out.println(writer);
-                    document = documentBuilder.parse(new InputSource(new StringReader(writer)));
-
-                    ClassDiagram diagram = new ClassDiagram();
-                    diagram.setDataByNode(document.getDocumentElement());
-
-//                    System.out.println("diagram:");
-                    document = documentBuilder.newDocument();
-                    document.appendChild(diagram.getElementDocument());
-//                    System.out.println(getXml(document));
-//                    System.out.println("writer:");
-//                    System.out.println(writer);
-//                    System.out.println();
-                } catch (SAXException | IOException | ParserConfigurationException e) {
-                    e.printStackTrace();
-                }
-
-            }
+            loopOnGUI();
             for (Component co : frame.getComponents())
                 if (co instanceof JPanel)
                     ((JPanel) co).updateUI();
