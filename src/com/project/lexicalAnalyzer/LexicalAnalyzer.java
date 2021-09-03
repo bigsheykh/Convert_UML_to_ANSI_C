@@ -71,11 +71,16 @@ public class LexicalAnalyzer {
         CommandExecutor.executeCommand(CommandExecutor.lexerCommand + " " + fileName + " " + lexOutput);
         FileWriter unknownWriter;
         try {
-            lexScanner = new Scanner(new File("result/" + lexOutput));
+            File resultFile = new File("result/" + lexOutput);
+            int counter = 10000;
+            while (!resultFile.exists() && counter > 0) counter--;
+            System.out.println("counter:");
+            System.out.println(counter);
+            lexScanner = new Scanner(resultFile);
             unknownWriter = new FileWriter("unknown.txt");
         } catch (IOException e) {
             e.printStackTrace();
-            return result;
+            return null;
         }
 
         int counter = lexScanner.nextInt();
@@ -89,7 +94,7 @@ public class LexicalAnalyzer {
                 value = Files.readString(valueNamePath);
             } catch (IOException e) {
                 e.printStackTrace();
-                return result;
+                return null;
             }
             TokenTypes tokenType;
             switch (type) {
@@ -299,6 +304,7 @@ public class LexicalAnalyzer {
                         unknownWriter.write("\n");
                     } catch (IOException e) {
                         e.printStackTrace();
+                        return null;
                     }
             }
             result.add(new Pair<>(tokenType, value));
@@ -308,6 +314,7 @@ public class LexicalAnalyzer {
             unknownWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
         return result;
     }

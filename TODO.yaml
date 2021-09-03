@@ -22,7 +22,6 @@ Phase1CodeGeneration:
   2: result dependency (do it for first and final)
 
 Phase2CodeGeneration:
-  0: get tokens of basic info about
   1: edit c files
     a : constructor
      I: definiton

@@ -19,7 +19,7 @@ public class CompleteMethod extends ClassMethod<CompleteValueType, CompleteAttri
         setReturnValueType(new CompleteValueType(method.getReturnValueType()));
     }
 
-    public String generateMethodUseInDefinition()
+    public String generateMethodUseInDefinition(String parentClassName)
     {
         StringBuilder allLines = new StringBuilder();
         allLines.append(openCurlyBracket);
@@ -28,7 +28,8 @@ public class CompleteMethod extends ClassMethod<CompleteValueType, CompleteAttri
             allLines.append(returnKeyword).append(whiteSpace);
         allLines.append(getName());
         allLines.append(openParenthesis);
-        allLines.append(thisKeyword);
+        allLines.append(and).append(openParenthesis).append(thisKeyword).append(arrow).append(parentClassName)
+                .append(closeParenthesis);
         for(CompleteAttribute completeAttribute:getParams())
             allLines.append(comma).append(whiteSpace).append(completeAttribute.getName());
         allLines.append(closeParenthesis);

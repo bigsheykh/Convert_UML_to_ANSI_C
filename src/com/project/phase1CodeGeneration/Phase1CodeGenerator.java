@@ -1,7 +1,6 @@
 package com.project.phase1CodeGeneration;
 
 import com.project.classBaseUML.DescriptiveMember;
-import com.project.classBaseUML.ValueType;
 import org.javatuples.Pair;
 
 import java.io.*;
@@ -174,7 +173,7 @@ public class Phase1CodeGenerator {
             else
             {
                 allLines.append(newLine);
-                allLines.append(method.getValue1().generateMethodUseInDefinition());
+                allLines.append(method.getValue1().generateMethodUseInDefinition(method.getValue0()));
             }
         }
         return allLines.toString();

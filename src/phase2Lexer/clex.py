@@ -167,6 +167,7 @@ if __name__ == "__main__":
     lexer.input(open(CFileName, "r").read())
     counter = 0
     os.makedirs("result", exist_ok=True)
+    os.makedirs(os.path.dirname("result/" + outputFile), exist_ok=True)
     result = open("result/" + outputFile, "w")
     while True:
         tok = lexer.token()

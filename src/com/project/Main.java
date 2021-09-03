@@ -7,6 +7,7 @@ import com.project.phase1CodeGeneration.CompleteDiagram;
 import com.project.phase1CodeGeneration.Phase1CodeGenerator;
 import com.project.lexicalAnalyzer.LexicalAnalyzer;
 import com.project.lexicalAnalyzer.TokenTypes;
+import com.project.phase2CodeGeneration.DiagramInfo;
 import org.javatuples.Pair;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
@@ -137,16 +138,27 @@ public class Main implements Runnable{
             {
                 BasicDiagramStatus status = guiDiagram.getStatusType();
                 System.out.println("code:" + status.getBasicDiagramStatusCode());
-                System.out.println("type:" + status);
-                System.out.println(guiDiagram.getAllProblems());
+//                System.out.println("type:" + status);
+//                System.out.println(guiDiagram.getAllProblems());
 
                 if(status == BasicDiagramStatus.Okay)
                 {
                     System.out.println();
                     GraphOperation result = guiDiagram.getResultOfGraphOperation();
                     System.out.println("Dependency Number:" + result.getDependencyNumber());
-                    System.out.println(Arrays.toString(result.getAllCycles()));
-                    System.out.println();
+//                    System.out.println(Arrays.toString(result.getAllCycles()));
+//                    System.out.println();
+
+                    if(counter %4 == 0 && result.getDependencyNumber() != 0)
+                    {
+                        CompleteDiagram completeDiagram = new CompleteDiagram(guiDiagram);
+                        Phase1CodeGenerator fileGenerator = new Phase1CodeGenerator(completeDiagram);
+                        System.out.println("generation success:" + fileGenerator.isSuccessFull());
+                        DiagramInfo diagramInfo = new DiagramInfo("diagram_info");
+                        if(diagramInfo.isSuccessful())
+                            System.out.println(diagramInfo);
+                    }
+
                 }
 
                 document = documentBuilder.newDocument();
@@ -162,21 +174,15 @@ public class Main implements Runnable{
                     ClassDiagram diagram = new ClassDiagram();
                     diagram.setDataByNode(document.getDocumentElement());
 
-                    System.out.println("diagram:");
+//                    System.out.println("diagram:");
                     document = documentBuilder.newDocument();
                     document.appendChild(diagram.getElementDocument());
-                    System.out.println(getXml(document));
-                    System.out.println("writer:");
-                    System.out.println(writer);
-                    System.out.println();
+//                    System.out.println(getXml(document));
+//                    System.out.println("writer:");
+//                    System.out.println(writer);
+//                    System.out.println();
                 } catch (SAXException | IOException | ParserConfigurationException e) {
                     e.printStackTrace();
-                }
-                if(counter %4 == 0)
-                {
-                    CompleteDiagram completeDiagram = new CompleteDiagram(guiDiagram);
-                    Phase1CodeGenerator fileGenerator = new Phase1CodeGenerator(completeDiagram);
-                    System.out.println("generation success:" + fileGenerator.isSuccessFull());
                 }
 
             }

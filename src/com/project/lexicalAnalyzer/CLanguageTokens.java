@@ -32,6 +32,7 @@ public interface CLanguageTokens {
     String tilde = "~";
     String doubleColon = "::";
     String destruct = "::~";
+    String and = "&";
     String doubleQuotation = "\"";
     String underscore = "_";
     String newLine = "\n";
