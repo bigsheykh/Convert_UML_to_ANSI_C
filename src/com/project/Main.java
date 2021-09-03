@@ -87,17 +87,19 @@ public class Main implements Runnable{
 
     public static void main(String[] args) {
 //        lexicalAnalyzerUser();
-        if(args.length < 2 || args[2].startsWith("-gui"))
+        int x = 0;
+        if(args[0].endsWith(".class") || args[0].endsWith(".jar"))
+            x = 1;
+        if(args.length < 2 || args[x].startsWith("-gui"))
             initializeGUI();
-        else if(args[2].startsWith("-xml"))
-            generateInfoForXML(args[3]);
+        else if(args[x].startsWith("-xml"))
+            generateInfoForXML(args[x + 1]);
         else
         {
             String diagramInfoDirectory = "diagram_info";
             String phase1Directory = "phase1";
             String otherCFiles = "c_files";
-            String headers = "headers";
-            for(int i = 1; i < args.length ; i += 2)
+            for(int i = x; i < args.length ; i += 2)
                 switch (args[i])
                 {
                     case "-i":
@@ -114,17 +116,12 @@ public class Main implements Runnable{
                     case "-C":
                         otherCFiles = args[i + 1];
                         break;
-                    case "-h":
-                    case "-H":
-                    case "-headers":
-                        headers = args[i + 1];
-                        break;
                     default:
                         System.out.println(args[i] + " is illegal");
                         return;
                 }
             Phase2CodeGenerator phase2 =
-                    new Phase2CodeGenerator(diagramInfoDirectory, phase1Directory, otherCFiles, headers);
+                    new Phase2CodeGenerator(diagramInfoDirectory, phase1Directory, otherCFiles);
 
         }
     }
@@ -132,9 +129,11 @@ public class Main implements Runnable{
     public static void initializeGUI()
     {
         documentFactory = DocumentBuilderFactory.newInstance();
+        TransformerFactory factory = TransformerFactory.newInstance();
         try {
+            transformer = factory.newTransformer();
             documentBuilder = documentFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException | TransformerConfigurationException e) {
             e.printStackTrace();
             return;
         }

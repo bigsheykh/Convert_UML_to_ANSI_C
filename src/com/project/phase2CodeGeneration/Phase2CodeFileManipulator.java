@@ -12,7 +12,7 @@ import java.util.Vector;
 
 public class Phase2CodeFileManipulator {
     enum FileType {
-        C,H,CPP
+        C,CPP
     }
 
     FileType fileType;
@@ -30,7 +30,7 @@ public class Phase2CodeFileManipulator {
             generatePhase2(tokens, generateWriter);
             generateWriter.flush();
             generateWriter.close();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
     }

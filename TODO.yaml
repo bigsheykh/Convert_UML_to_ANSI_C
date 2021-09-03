@@ -1,6 +1,5 @@
 UI:
-  1: get type of operation
-  2: get neccery inputs
+  1: make it general
 
 classBaseUML:
   1: SameAttributeAndMethodName
@@ -38,9 +37,57 @@ Phase2CodeGeneration:
     h: []
 
   2: edit cpp files
+    0: change .cpp to .c
     a: detect "this" (probably needs nothing!)
     b: change attribute to this.attribute -->define
     c: method call -- >define
+    d: add header include
+  detail:
+
+    see class X -> union X
+    if(--- is not a pointer)
+    sizeof(---) do nothing
+    (---) v -> v.union---
+
+    constructor:(if it's not param)
+    class v m (if pointer = 0)
+    use constructor(&m)
+    class v m(--)
+    use constructor(&m, --)
+    class *m = new class V(--)
+    use malloc
+    use constructor(m, --)
+
+    class *m = new class V[]
+    use malloc
+    use array constructor
+
+    method:
+      v->m(---)
+      use m(v,---)
+      v.m(---)
+      use m(&(v), ---)
+
+    destructor
+    delete x
+    destructor x
+    delete[] x
+    destructor all x
+
+
+    cpp:
+      ID::ID(---)
+      change constructor signature
+      ID::~ID()
+      change destructor signature
+      type ID::name(----)
+      change method signature
+
+
+      detect attributes without this
+      detect methods without this
+
+
 
 test:
   1: phase1 and 2 total

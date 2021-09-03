@@ -1,5 +1,6 @@
 package com.project.phase2CodeGeneration;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +21,7 @@ public class Phase2CodeGenerator {
         //TODO other instructions
     }
 
-    public Phase2CodeGenerator(String diagramInfoDirectory, String phase1Directory, String otherCFiles, String headers)
+    public Phase2CodeGenerator(String diagramInfoDirectory, String phase1Directory, String otherCFiles)
     {
         this.files = new Vector<>();
         successful = false;
@@ -31,17 +32,15 @@ public class Phase2CodeGenerator {
             return;
         }
         try {
-            Files.find(Paths.get(headers),Integer.MAX_VALUE,
-                            (filePath, fileAttr) -> fileAttr.isRegularFile() && (filePath.endsWith(".h")))
-                    .forEach(item -> addPath(Phase2CodeFileManipulator.FileType.H, item));
-
+            new File("generate/" + phase1Directory).mkdirs();
+            new File("generate/" + otherCFiles).mkdirs();
             Files.find(Paths.get(otherCFiles), Integer.MAX_VALUE,
                             (filePath, fileAttr) -> fileAttr.isRegularFile() &&
-                                    (filePath.endsWith(".c") || filePath.endsWith(".h")))
+                                    (filePath.toString().endsWith(".c") || filePath.toString().endsWith(".h")))
                     .forEach(item -> addPath(Phase2CodeFileManipulator.FileType.C ,item));
 
             Files.find(Paths.get(phase1Directory),Integer.MAX_VALUE
-                    ,(filePath, fileAttr) -> fileAttr.isRegularFile() && (filePath.endsWith(".cpp")))
+                    ,(filePath, fileAttr) -> fileAttr.isRegularFile() && (filePath.toString().endsWith(".cpp")))
                     .forEach(item -> addPath(Phase2CodeFileManipulator.FileType.CPP, item));
 
         } catch (IOException e) {
