@@ -12,7 +12,7 @@ import java.util.Vector;
 
 public class Phase2CodeFileManipulator {
     enum FileType {
-        C,CPP
+        C,H,CPP
     }
 
     FileType fileType;

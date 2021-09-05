@@ -21,7 +21,7 @@ public class Phase2CodeGenerator {
         //TODO other instructions
     }
 
-    public Phase2CodeGenerator(String diagramInfoDirectory, String phase1Directory, String otherCFiles)
+    public Phase2CodeGenerator(String diagramInfoDirectory, String phase1Directory, String otherCFiles, String headers)
     {
         this.files = new Vector<>();
         successful = false;
@@ -34,10 +34,15 @@ public class Phase2CodeGenerator {
         try {
             new File("generate/" + phase1Directory).mkdirs();
             new File("generate/" + otherCFiles).mkdirs();
+            new File("generate/" + headers).mkdirs();
             Files.find(Paths.get(otherCFiles), Integer.MAX_VALUE,
                             (filePath, fileAttr) -> fileAttr.isRegularFile() &&
                                     (filePath.toString().endsWith(".c") || filePath.toString().endsWith(".h")))
                     .forEach(item -> addPath(Phase2CodeFileManipulator.FileType.C ,item));
+
+            Files.find(Paths.get(headers),Integer.MAX_VALUE,
+                            (filePath, fileAttr) -> fileAttr.isRegularFile() && (filePath.endsWith(".h")))
+                    .forEach(item -> addPath(Phase2CodeFileManipulator.FileType.H, item));
 
             Files.find(Paths.get(phase1Directory),Integer.MAX_VALUE
                     ,(filePath, fileAttr) -> fileAttr.isRegularFile() && (filePath.toString().endsWith(".cpp")))

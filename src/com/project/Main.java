@@ -99,6 +99,7 @@ public class Main implements Runnable{
             String diagramInfoDirectory = "diagram_info";
             String phase1Directory = "phase1";
             String otherCFiles = "c_files";
+            String headers = "headers";
             for(int i = x; i < args.length ; i += 2)
                 switch (args[i])
                 {
@@ -116,12 +117,17 @@ public class Main implements Runnable{
                     case "-C":
                         otherCFiles = args[i + 1];
                         break;
+                    case "-h":
+                    case "-H":
+                    case "-headers":
+                        headers = args[i + 1];
+                        break;
                     default:
                         System.out.println(args[i] + " is illegal");
                         return;
                 }
             Phase2CodeGenerator phase2 =
-                    new Phase2CodeGenerator(diagramInfoDirectory, phase1Directory, otherCFiles);
+                    new Phase2CodeGenerator(diagramInfoDirectory, phase1Directory, otherCFiles, headers);
 
         }
     }

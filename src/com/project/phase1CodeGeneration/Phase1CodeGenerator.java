@@ -92,7 +92,7 @@ public class Phase1CodeGenerator {
     /// TODO move to CompleteClass
     public static String generateDestructor(String className)
     {
-        String baseClassName = className + destruct + className;
+        String baseClassName = className + destruct + className + openParenthesis + closeParenthesis;
         return baseClassName + EmptyBlock;
     }
 
@@ -153,10 +153,10 @@ public class Phase1CodeGenerator {
         allLines.append(tab + openCurlyBracket + newLine);
         for(CompleteAttribute attribute:completeClass.getAllAttributes())
             allLines.append(tab + tab).append(attribute.getShowName()).append(semiColon).append(newLine);
-        allLines.append(tab + closeCurlyBracket);
+        allLines.append(tab + closeCurlyBracket + semiColon);
         allLines.append(newLine);
 
-        allLines.append(closeCurlyBracket);
+        allLines.append(closeCurlyBracket).append(semiColon);
         allLines.append(newLine);
         return allLines.toString();
     }
@@ -190,7 +190,7 @@ public class Phase1CodeGenerator {
     /// TODO move to CompleteClass
     public static String generateDestructorDefinition(String className)
     {
-        return generateDestructorName(className) +
+        return voidKeyword + whiteSpace + generateDestructorName(className) +
                 DescriptiveMember.generateParamsTogether(new Vector<>()
                         , CompleteAttribute.generateAttributeThisText(className)) + semiColon + newLine ;
     }
@@ -208,6 +208,7 @@ public class Phase1CodeGenerator {
     public static String generateConstructorDefinition(CompleteConstructor constructor, String className)
     {
         StringBuilder allLines = new StringBuilder();
+        allLines.append(semiColon + whiteSpace);
         allLines.append(generateConstructorName(className))
                 .append(constructor.getShowName(CompleteAttribute.generateAttributeThisText(className).replace(openParenthesis,
                         openParenthesis + unionKeyword + whiteSpace +  className + whiteSpace + comma)));
