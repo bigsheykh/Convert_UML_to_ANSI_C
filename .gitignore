@@ -2,3 +2,9 @@
 *.iml
 *.class
 */result/
+c_files/
+diagram_info/
+phase1/
+tokens.txt
+generate/
+diagram_detail.xml

@@ -31,8 +31,10 @@ public class GUITextFieldSetter implements DocumentListener {
     }
 
     void inputChecker() {
-        if (LexicalAnalyzer.isNameOkayInC(textField.getText()))
+        if(LexicalAnalyzer.isStructNameOkayInC(textField.getText()))
             textField.setBackground(Color.GREEN);
+        else if (LexicalAnalyzer.isNameOkayInC(textField.getText()))
+            textField.setBackground(Color.getHSBColor((float) 0.75, (float) 0.5, (float) 50.0));
         else if (LexicalAnalyzer.isTypeOkayInC(textField.getText()))
             textField.setBackground(Color.getHSBColor((float) 0.75, (float) 0.5, (float) 100.0));
         else

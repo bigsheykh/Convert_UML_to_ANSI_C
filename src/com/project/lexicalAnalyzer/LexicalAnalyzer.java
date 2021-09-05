@@ -3,68 +3,93 @@ package com.project.lexicalAnalyzer;
 import com.project.CommandExecutor;
 import org.javatuples.Pair;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.Vector;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 import java.util.regex.Pattern;
 
-public class LexicalAnalyzer {
+import static com.project.lexicalAnalyzer.CLanguageTokens.*;
 
-    public static boolean isNameOkayInC(String s) {
-        if (s == null)
-            return false;
-        return Pattern.matches("[_a-zA-Z][_a-zA-Z0-9]*", s) && !Arrays.asList(CLanguageTokens.reservedKeyword).contains(s)
-                && !Arrays.asList(CLanguageTokens.reservedTypes).contains(s) && !Arrays.asList(CLanguageTokens.reservedTypeDescribers).contains(s);
+public interface LexicalAnalyzer {
+
+    private static boolean ifPlusWhiteSpaceIsSubstring(String s, String keyword)
+    {
+       return s.startsWith(keyword + whiteSpace) ;
     }
 
-    public static String deleteTypeQualifier(String s) {
-        if (s.startsWith(CLanguageTokens.constKeyword))
-            return s.substring(CLanguageTokens.constKeyword.length() + 1);
-        if (s.startsWith(CLanguageTokens.volatileKeyword))
-            return s.substring(CLanguageTokens.volatileKeyword.length() + 1);
+    static String getWithoutArrayBracket(String s)
+    {
+        if(!s.endsWith(closeSquareBracket))
+                return s;
+        for(int i = s.length() - 2; i > 0; i--)
+            if(s.toCharArray()[i] == openSquareBracket.toCharArray()[0])
+            {
+                if(Pattern.matches("[1-9][0-9]*", s.substring(i + 1, s.length() - 1)))
+                    return getWithoutArrayBracket(s.substring(0, i));
+                return null;
+            }
+        return null;
+    }
+
+    static boolean isStructNameOkayInC(String name)
+    {
+        return isNameOkayInC(name) && !name.contains("[");
+    }
+    static boolean isNameOkayInC(String name) {
+        if (name == null)
+            return false;
+        String s = getWithoutArrayBracket(name);
+        if(s == null)
+            return false;
+        return Pattern.matches("[_a-zA-Z][_a-zA-Z0-9]*", s) && !Arrays.asList(reservedKeyword).contains(s)
+                && !Arrays.asList(reservedTypes).contains(s) && !Arrays.asList(reservedTypeDescribers).contains(s);
+    }
+
+    static String deleteTypeQualifier(String s) {
+        if (ifPlusWhiteSpaceIsSubstring(s, constKeyword))
+            return s.substring(constKeyword.length() + 1);
+        if (ifPlusWhiteSpaceIsSubstring(s, volatileKeyword))
+            return s.substring(volatileKeyword.length() + 1);
         return s;
     }
 
     private static String deleteClassSpecifier(String s) {
-        if (s.startsWith(CLanguageTokens.extern))
-            return deleteClassSpecifier(s.substring(CLanguageTokens.extern.length() + 1));
-        if (s.startsWith(CLanguageTokens.typedef))
-            return deleteClassSpecifier(s.substring(CLanguageTokens.typedef.length() + 1));
-        if (s.startsWith(CLanguageTokens.staticKeyword))
-            return deleteClassSpecifier(s.substring(CLanguageTokens.staticKeyword.length() + 1));
-        if (s.startsWith(CLanguageTokens.auto))
-            return deleteClassSpecifier(s.substring(CLanguageTokens.auto.length() + 1));
-        if (s.startsWith(CLanguageTokens.register))
-            return deleteClassSpecifier(s.substring(CLanguageTokens.register.length() + 1));
+        s = deleteTypeQualifier(s);
+        if (ifPlusWhiteSpaceIsSubstring(s, extern))
+            return deleteClassSpecifier(s.substring(extern.length() + 1));
+        if (ifPlusWhiteSpaceIsSubstring(s, typedef))
+            return deleteClassSpecifier(s.substring(typedef.length() + 1));
+        if (ifPlusWhiteSpaceIsSubstring(s, staticKeyword))
+            return deleteClassSpecifier(s.substring(staticKeyword.length() + 1));
+        if (ifPlusWhiteSpaceIsSubstring(s, auto))
+            return deleteClassSpecifier(s.substring(auto.length() + 1));
+        if (ifPlusWhiteSpaceIsSubstring(s, register))
+            return deleteClassSpecifier(s.substring(register.length() + 1));
         return s;
     }
 
     private static String unStruct(String s) {
-        if (s.startsWith(CLanguageTokens.structKeyword))
-            return s.substring(CLanguageTokens.structKeyword.length() + 1);
-        if (s.startsWith(CLanguageTokens.unionKeyword))
-            return s.substring(CLanguageTokens.unionKeyword.length() + 1);
-        if (s.startsWith(CLanguageTokens.classKeyword))
-            return s.substring(CLanguageTokens.classKeyword.length() + 1);
-        if (s.startsWith(CLanguageTokens.enumKeyword))
-            return s.substring(CLanguageTokens.enumKeyword.length() + 1);//TODO edit equals mistake
+        s = deleteTypeQualifier(s);
+        if (ifPlusWhiteSpaceIsSubstring(s, structKeyword))
+            return s.substring(structKeyword.length() + 1);
+        if (ifPlusWhiteSpaceIsSubstring(s, unionKeyword))
+            return s.substring(unionKeyword.length() + 1);
+        if (ifPlusWhiteSpaceIsSubstring(s, classKeyword))
+            return s.substring(classKeyword.length() + 1);
+        if (ifPlusWhiteSpaceIsSubstring(s, enumKeyword))
+            return s.substring(enumKeyword.length() + 1);
 
         return s;
     }
 
-    public static boolean isTypeOkayInC(String s) {
-        if (s == null)
+    static boolean isTypeOkayInC(String s) {
+        if (s == null || s.contains("["))
             return false;
-        return isNameOkayInC(unStruct(deleteClassSpecifier(s))) ||
-                Arrays.asList(CLanguageTokens.reservedTypes).contains(deleteClassSpecifier(s));
+        return isNameOkayInC(deleteTypeQualifier(unStruct(deleteClassSpecifier(s)))) ||
+                Arrays.asList(reservedTypes).contains(deleteClassSpecifier(s));
     }
 
-    public static Vector<Pair<TokenTypes, String>> getTokensOfPhase2Files(String fileName) {
+    static Vector<Pair<TokenTypes, String>> getTokensOfPhase2Files(String fileName) {
         Vector<Pair<TokenTypes, String>> result = new Vector<>();
         String lexOutput = fileName + ".result";
         Scanner lexScanner;

@@ -202,9 +202,9 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
 
     @Override
     public Pair<BasicDiagramStatus, LinkedList<String>> statusOfMember() {
-        if (!LexicalAnalyzer.isNameOkayInC(getSuperClass()))
+        if (!LexicalAnalyzer.isStructNameOkayInC(getSuperClass()))
             return DescriptiveMember.newStatus(BasicDiagramStatus.SuperClassNameError, "super name is invalid");
-        if (!LexicalAnalyzer.isNameOkayInC(getName()) || getName().equals("null"))
+        if (!LexicalAnalyzer.isStructNameOkayInC(getName()) || getName().equals("null"))
             return DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError, "class name is invalid");
 
         Pair<BasicDiagramStatus, LinkedList<String>> status = DescriptiveMember.statusOfVector(
@@ -223,9 +223,9 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
     @Override
     public Vector<Pair<BasicDiagramStatus, LinkedList<String>>> getAllProblems() {
         Vector<Pair<BasicDiagramStatus, LinkedList<String>>> vector = new Vector<>();
-        if (!LexicalAnalyzer.isNameOkayInC(getSuperClass()))
+        if (!LexicalAnalyzer.isStructNameOkayInC(getSuperClass()))
             vector.add(DescriptiveMember.newStatus(BasicDiagramStatus.SuperClassNameError, "super name is invalid"));
-        if (!LexicalAnalyzer.isNameOkayInC(getName()) || getName().equals("null"))
+        if (!LexicalAnalyzer.isStructNameOkayInC(getName()) || getName().equals("null"))
             vector.add(DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError, "class name is invalid"));
 
         vector.addAll(DescriptiveMember.getAllProblemsOfVector(
