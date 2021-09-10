@@ -151,6 +151,8 @@ public class Phase1CodeGenerator {
 
         allLines.append(tab + structKeyword + newLine);
         allLines.append(tab + openCurlyBracket + newLine);
+        allLines.append(tab + tab).
+                append(CompleteAttribute.generateAttributeThisText(className)).append(semiColon).append(newLine);
         for(CompleteAttribute attribute:completeClass.getAllAttributes())
             allLines.append(tab + tab).append(attribute.getShowName()).append(semiColon).append(newLine);
         allLines.append(tab + closeCurlyBracket + semiColon);
@@ -208,7 +210,6 @@ public class Phase1CodeGenerator {
     public static String generateConstructorDefinition(CompleteConstructor constructor, String className)
     {
         StringBuilder allLines = new StringBuilder();
-        allLines.append(semiColon + whiteSpace);
         allLines.append(generateConstructorName(className))
                 .append(constructor.getShowName(CompleteAttribute.generateAttributeThisText(className).replace(openParenthesis,
                         openParenthesis + unionKeyword + whiteSpace +  className + whiteSpace + comma)));

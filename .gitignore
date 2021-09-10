@@ -1,13 +1,9 @@
 .idea/*
 *.iml
 *.class
-c_files/
-diagram_info/
-phase1/
 tokens.txt
 generate/
 diagram_detail.xml
 unknown.txt
 result/
-headers
 out
