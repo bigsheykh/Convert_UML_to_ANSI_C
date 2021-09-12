@@ -22,6 +22,9 @@ public interface CLanguageTokens {
     String closeCurlyBracket = "}";
     String openSquareBracket = "[";
     String closeSquareBracket = "]";
+    String lessThanSign = "<";
+    String greaterThanSign = ">";
+    String equalSign = "=";
     String ellipsis = "...";
     String star = "*";
     String arrow = "->";
@@ -40,6 +43,7 @@ public interface CLanguageTokens {
     String lineComment = "//";
     String whiteSpace = " ";
     String sharp = "#";
+
     String includeKeyword = "include";
     String defineKeyword = "define";
     String ifndef = "ifndef";
@@ -52,11 +56,16 @@ public interface CLanguageTokens {
     String parentKeyword = "parent";
     String methodKeyword = "method";
     String attributeKeyword = "attribute";
+    String newKeyword = "new";
+    String deleteKeyword = "delete";
+    String mallocKeyword = "malloc";
+    String sizeofKeyword = "sizeof";
 
     String[] reservedKeyword = new String[]{
-            "_Packed", "break", "case", "continue", "default",
-            "do", "else", "enum", "for", "goto", "if", returnKeyword,
-            "signed", "sizeof", "switch", "unsigned", "while"
+            "_Packed", "break", "case", "continue", "default", "do",
+            "else", "enum", "for", "goto", "if", returnKeyword,
+            "signed", sizeofKeyword, "switch", "unsigned", "while",
+            newKeyword, deleteKeyword, mallocKeyword,
     };
 
     String[] reservedTypes = new String[]{

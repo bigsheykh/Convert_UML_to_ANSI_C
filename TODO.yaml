@@ -17,8 +17,6 @@ Phase1CodeGeneration:
   1: output status if failed and when it failed (do it for first and final)
   2: result dependency (do it for first and final)
   3: check header upper method call
-  4: add this to header files. 
-  5: add allocation headers
 
 Phase2CodeGeneration:
   1: edit header files

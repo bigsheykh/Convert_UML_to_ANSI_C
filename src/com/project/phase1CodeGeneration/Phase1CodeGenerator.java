@@ -125,6 +125,7 @@ public class Phase1CodeGenerator {
         if(completeClass.isHavingDestructor())
         {
             allLines.append(generateDestructorDefinition(completeClass.getName()));
+            allLines.append(generateDeleteDefinition(completeClass.getName()));
             allLines.append(newLine);
         }
 
@@ -146,7 +147,8 @@ public class Phase1CodeGenerator {
     public static String generateUnionDefinitions(CompleteClass completeClass, String className)
     {
         StringBuilder allLines = new StringBuilder();
-        allLines.append(unionKeyword + whiteSpace).append(completeClass.getName()).append(newLine).append(openCurlyBracket);
+        allLines.append(unionKeyword + whiteSpace).append(completeClass.getName()).append(newLine)
+                .append(openCurlyBracket).append(newLine);
         allLines.append(generateUnionUsage(completeClass.getParents(), className));
 
         allLines.append(tab + structKeyword + newLine);
@@ -198,11 +200,27 @@ public class Phase1CodeGenerator {
     }
 
     /// TODO move to CompleteClass
+    public static String generateDeleteDefinition(String className)
+    {
+        StringBuilder allLines = new StringBuilder();
+        allLines.append(voidKeyword + whiteSpace + deleteKeyword).append(DescriptiveMember.generateParamsTogether(
+                new Vector<>(), CompleteAttribute.generateAttributeThisText(className)));
+        allLines.append(newLine + openCurlyBracket + newLine);
+        allLines.append(tab).append(generateDestructorName(className))
+                .append(openParenthesis + thisKeyword + closeParenthesis + semiColon + newLine);
+        allLines.append(closeCurlyBracket).append(newLine);
+        return allLines.toString();
+    }
+
+    /// TODO move to CompleteClass
     public static String generateConstructorDefinitions(Vector<CompleteConstructor> constructors, String className)
     {
         StringBuilder allLines = new StringBuilder();
         for(CompleteConstructor constructor:constructors)
+        {
             allLines.append(generateConstructorDefinition(constructor, className)).append(semiColon).append(newLine);
+            allLines.append(generateNewDefinition(constructor, className));
+        }
         return allLines.toString();
     }
 
@@ -210,9 +228,32 @@ public class Phase1CodeGenerator {
     public static String generateConstructorDefinition(CompleteConstructor constructor, String className)
     {
         StringBuilder allLines = new StringBuilder();
-        allLines.append(generateConstructorName(className))
-                .append(constructor.getShowName(CompleteAttribute.generateAttributeThisText(className).replace(openParenthesis,
-                        openParenthesis + unionKeyword + whiteSpace +  className + whiteSpace + comma)));
+        allLines.append(voidKeyword + whiteSpace).append(generateConstructorName(className))
+                .append(constructor.getShowName(CompleteAttribute.generateAttributeThisText(className)
+                        .replace(openParenthesis, openParenthesis + unionKeyword + whiteSpace +
+                                className + whiteSpace + comma)));
+        return allLines.toString();
+    }
+
+    // TODO move to CompleteConstructor
+    public static String generateNewDefinition(CompleteConstructor constructor, String className)
+    {
+        StringBuilder allLines = new StringBuilder();
+        allLines.append(generateConstructorReturnValue(className)).append(whiteSpace).append(generateNewName(className))
+                .append(constructor.getShowName());
+        allLines.append(newLine + openCurlyBracket + newLine);
+        allLines.append(tab).append(CompleteAttribute.generateAttributeThisText(className))
+                .append(whiteSpace + equalSign + whiteSpace)
+                .append(openParenthesis).append(generateConstructorReturnValue(className)).append(closeParenthesis)
+                .append(whiteSpace + mallocKeyword + openParenthesis + sizeofKeyword + openParenthesis + unionKeyword)
+                .append(className).append(closeParenthesis + closeParenthesis + semiColon + newLine);
+        allLines.append(tab).append(generateConstructorName(className)).append(openParenthesis + thisKeyword);
+        for(CompleteAttribute attribute:constructor.getParams())
+            allLines.append(comma + whiteSpace).append(attribute.getName());
+        allLines.append(closeParenthesis + semiColon + newLine);
+        allLines.append(tab + returnKeyword + whiteSpace + thisKeyword + semiColon + newLine);
+        allLines.append(closeCurlyBracket + newLine + newLine);
+
         return allLines.toString();
     }
 
@@ -220,6 +261,17 @@ public class Phase1CodeGenerator {
     public static String generateConstructorName(String className)
     {
         return constructorKeyword + className;
+    }
+    /// TODO move to CompleteConstructor
+    public static String generateConstructorReturnValue(String className)
+    {
+        return unionKeyword + whiteSpace + className + star;
+    }
+
+    /// TODO move to CompleteConstructor
+    public static String generateNewName(String className)
+    {
+        return newKeyword + className;
     }
 
     /// TODO move to CompleteClass
@@ -233,6 +285,9 @@ public class Phase1CodeGenerator {
     {
         StringBuilder allLines = new StringBuilder();
         allLines.append(generateIncludeGuard(fileName));
+        allLines.append(newLine);
+        allLines.append(sharp + includeKeyword + whiteSpace + lessThanSign + "stdio.h" + greaterThanSign + newLine);
+        allLines.append(sharp + includeKeyword + whiteSpace + lessThanSign + "stdlib.h" + greaterThanSign + newLine);
         allLines.append(newLine);
         allLines.append(generateInlineDefinitionOfClass(classes));
         allLines.append(newLine);

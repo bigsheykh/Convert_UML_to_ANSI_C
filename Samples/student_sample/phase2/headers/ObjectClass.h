@@ -6,7 +6,8 @@
 
 
 union Object
-{	struct
+{
+	struct
 	{
 		union Object* this;
 	};

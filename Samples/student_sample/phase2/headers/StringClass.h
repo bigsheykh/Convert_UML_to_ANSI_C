@@ -7,7 +7,8 @@
 
 
 union String
-{	union Object unionObject;
+{
+	union Object unionObject;
 	struct
 	{
 		union String* this;

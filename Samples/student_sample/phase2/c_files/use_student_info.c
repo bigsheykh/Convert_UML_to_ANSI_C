@@ -1,9 +1,5 @@
 #include "StudentClass.h"
 
-struct UseInfo
-{
-    class Student students;
-};
 
 void tm(class FixedSizeString pro)
 {

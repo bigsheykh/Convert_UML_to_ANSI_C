@@ -15,14 +15,34 @@ public class Phase2CodeFileManipulator {
         C,H,CPP
     }
 
+    enum LocationState {
+        OUTSIDE, FUNCTION, METHOD, CONSTRUCTOR, DESTRUCTOR, STRUCTURE
+    }
+
+    enum WaitStateOfOutsideBlock {
+        NAME, OPEN_PARENTHESIS, PARAM_OR_CLOSE_PARENTHESIS , COMMA_OR_CLOSE_PARENTHESIS, OPEN_CURLY_BRACKET,
+        BODY, CLOSE_CURLY_BRACKET
+    }
+
+    enum InlineState{
+
+    }
+
     FileType fileType;
     DiagramInfo diagramInfo;
     Vector<Pair<TokenTypes,String>> pairVector;
+
+    private int depthOfParenthesis;
+    private int depthOfCurlyBracket;
+    private int depthOfSquareBracket;
 
     public Phase2CodeFileManipulator(FileType type, Path path, DiagramInfo diagramInfo) {
         this.fileType = type;
         this.diagramInfo = diagramInfo;
         this.pairVector = new Vector<>();
+        this.depthOfParenthesis = 0;
+        this.depthOfCurlyBracket = 0;
+        this.depthOfSquareBracket = 0;
         Vector<Pair<TokenTypes, String>>  tokens = LexicalAnalyzer.getTokensOfPhase2Files(path.normalize().toString());
         Path generatedPath = Path.of("generate/", String.valueOf(path));
         try {
@@ -47,30 +67,37 @@ public class Phase2CodeFileManipulator {
 
     private void decreaseParenthesis()
     {
-
+        depthOfParenthesis--;
+        //TODO flush inside
     }
 
     private void increaseParenthesis()
     {
+        depthOfParenthesis++;
+        //TODO flush before
 
     }
     private void decreaseCurlyBracket()
     {
+        depthOfCurlyBracket--;
     }
 
     private void increaseCurlyBracket()
     {
+        depthOfCurlyBracket++;
+        inLineFlush();
+        outLineFlush();
 
     }
 
     private void decreaseSquareBracket()
     {
-
+        depthOfSquareBracket --;
     }
 
     private void increaseSquareBracket()
     {
-
+        depthOfSquareBracket ++;
     }
 
     private void addID()

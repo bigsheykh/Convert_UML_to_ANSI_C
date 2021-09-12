@@ -8,7 +8,8 @@
 
 
 union FixedSizeString
-{	union Object unionObject;
+{
+	union Object unionObject;
 	union String unionString;
 	struct
 	{
@@ -27,9 +28,27 @@ char* get_chars(union FixedSizeString* this)
 	return get_chars(&(this->unionString));
 }
 
-constructorFixedSizeString(union FixedSizeString* this);
-constructorFixedSizeString(union FixedSizeString* this, int size_of_string);
+void constructorFixedSizeString(union FixedSizeString* this);
+union FixedSizeString* newFixedSizeString()
+{
+	union FixedSizeString* this = (union FixedSizeString*) malloc(sizeof(unionFixedSizeString));
+	constructorFixedSizeString(this);
+	return this;
+}
+
+void constructorFixedSizeString(union FixedSizeString* this, int size_of_string);
+union FixedSizeString* newFixedSizeString(int size_of_string)
+{
+	union FixedSizeString* this = (union FixedSizeString*) malloc(sizeof(unionFixedSizeString));
+	constructorFixedSizeString(this, size_of_string);
+	return this;
+}
+
 
 void destructorFixedSizeString(union FixedSizeString* this);
+void delete(union FixedSizeString* this)
+{
+	destructorFixedSizeString(this);
+}
 
 #endif
