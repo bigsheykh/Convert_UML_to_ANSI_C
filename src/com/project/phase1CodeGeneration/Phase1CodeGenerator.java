@@ -196,7 +196,7 @@ public class Phase1CodeGenerator {
     {
         return voidKeyword + whiteSpace + generateDestructorName(className) +
                 DescriptiveMember.generateParamsTogether(new Vector<>()
-                        , CompleteAttribute.generateAttributeThisText(className)) + semiColon + newLine ;
+                        , CompleteAttribute.generateAttributeThisText(className)) + semiColon + newLine;
     }
 
     /// TODO move to CompleteClass
@@ -208,6 +208,8 @@ public class Phase1CodeGenerator {
         allLines.append(newLine + openCurlyBracket + newLine);
         allLines.append(tab).append(generateDestructorName(className))
                 .append(openParenthesis + thisKeyword + closeParenthesis + semiColon + newLine);
+        allLines.append(tab + freeKeyword + openParenthesis).append(thisKeyword).append(closeParenthesis)
+                .append(newLine);
         allLines.append(closeCurlyBracket).append(newLine);
         return allLines.toString();
     }

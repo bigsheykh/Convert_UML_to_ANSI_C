@@ -36,16 +36,40 @@ public class DiagramInfo {
         successful = true;
     }
 
-    public Vector<ClassInfo> getInfoVector() {
-        return infoVector;
-    }
-
     public HashSet<String> getClassNames() {
         return classNames;
     }
 
     public boolean isSuccessful() {
         return successful;
+    }
+
+    public boolean isHaveConstructor(String className) {
+        for(ClassInfo info:infoVector)
+            if(className.equals(info.getClassName()))
+                return info.isHaveConstructor();
+        return false;
+    }
+
+    public boolean isHaveDestructor(String className) {
+        for(ClassInfo info:infoVector)
+            if(className.equals(info.getClassName()))
+                return info.isHaveDestructor();
+        return false;
+    }
+
+    public HashSet<String> getMethods(String className) {
+        for(ClassInfo info:infoVector)
+            if(className.equals(info.getClassName()))
+                return info.getMethods();
+        return new HashSet<>();
+    }
+
+    public HashSet<String> getAttributes(String className) {
+        for(ClassInfo info:infoVector)
+            if(className.equals(info.getClassName()))
+                return info.getAttributes();
+        return new HashSet<>();
     }
 
 }

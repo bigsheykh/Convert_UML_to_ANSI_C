@@ -16,6 +16,7 @@ public interface CLanguageTokens {
             constKeyword, volatileKeyword, extern, structKeyword, unionKeyword,
             classKeyword, typedef, staticKeyword, auto, register
     };
+
     String openParenthesis = "(";
     String closeParenthesis = ")";
     String openCurlyBracket = "{";
@@ -46,9 +47,11 @@ public interface CLanguageTokens {
 
     String includeKeyword = "include";
     String defineKeyword = "define";
+    String undefKeyword = "undef";
     String ifndef = "ifndef";
     String endif = "endif";
     String thisKeyword = "this";
+    String thisManipulated = "this_keyword";
     String constructorKeyword = "constructor";
     String destructorKeyword = "destructor";
     String voidKeyword = "void";
@@ -60,12 +63,15 @@ public interface CLanguageTokens {
     String deleteKeyword = "delete";
     String mallocKeyword = "malloc";
     String sizeofKeyword = "sizeof";
+    String freeKeyword = "free";
+    String vaArgsToken = "__VA_ARGS__";
 
     String[] reservedKeyword = new String[]{
             "_Packed", "break", "case", "continue", "default", "do",
             "else", "enum", "for", "goto", "if", returnKeyword,
             "signed", sizeofKeyword, "switch", "unsigned", "while",
-            newKeyword, deleteKeyword, mallocKeyword,
+            newKeyword, deleteKeyword, mallocKeyword, freeKeyword,
+            thisKeyword, thisManipulated
     };
 
     String[] reservedTypes = new String[]{

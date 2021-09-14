@@ -11,6 +11,7 @@ void tm(class FixedSizeString pro)
 int main()
 {
     class Student vm(7);
+    class FixedSizeString fixed();
     char *student_name = "Amirreza";
     int i = 0;
     vm.student_name.set_chars(X);

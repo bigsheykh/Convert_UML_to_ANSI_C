@@ -24,6 +24,6 @@ void Student::set_professor(int number, FixedSizeString professor_name)
 
 Student::~Student()
 {
-	delete[] professors;
+
 }
 

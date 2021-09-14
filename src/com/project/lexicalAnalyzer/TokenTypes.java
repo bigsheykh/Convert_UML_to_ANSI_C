@@ -21,6 +21,7 @@ public enum TokenTypes {
     TYPES,
     ENUM,
     SIGN,
+    RETURN,
     THIS,
 
     RESERVED_KEYWORD,

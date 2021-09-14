@@ -296,7 +296,6 @@ public interface LexicalAnalyzer {
                 case "FOR":
                 case "GOTO":
                 case "IF":
-                case "RETURN":
                 case "SWITCH":
                 case "WHILE":
                     tokenType = TokenTypes.RESERVED_KEYWORD;
@@ -318,6 +317,9 @@ public interface LexicalAnalyzer {
                     break;
                 case "ATTRIBUTE":
                     tokenType = TokenTypes.ATTRIBUTE;
+                    break;
+                case "RETURN":
+                    tokenType = TokenTypes.RETURN;
                     break;
                 default:
                     tokenType = TokenTypes.UNKNOWN;

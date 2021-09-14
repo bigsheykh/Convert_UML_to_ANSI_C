@@ -19,36 +19,27 @@ Phase1CodeGeneration:
   3: check header upper method call
 
 Phase2CodeGeneration:
-  1: edit header files
-      change class to union
-      change this to this_union
-
   2: edit c files
     a : constructor
      I: definiton
      II: "new"
-    b: destructor
-      I: "delete"
-      II: }
     c: "class" -> "union"
     d: cast (optional)
     e: method call
-    f: {}
     g: ()
     h: []
+    Db: destructor
+      I: "delete"
+      II: }
+    Df: {}
 
-  3: edit cpp files
-    0: change .cpp to .c
-    a: detect "this" (probably needs nothing!)
-    b: change attribute to this.attribute -->define
-    c: method call -- >define
-    d: add header include
+
   detail:
 
     see class X -> union X
       if(--- is not a pointer)
         sizeof(---) do nothing
-        (---) v -> v.union---
+    optinal: (---) v -> v.union---
 
     constructor: (if it's not param)
       class v m (if pointer = 0)
@@ -95,3 +86,7 @@ test:
   2: xml*
   3: BasicDiagramStatus+
   4: graphBaseDependency+
+
+laptop: 
+        https://www.cpubenchmark.net/compare/AMD-FX-7600P-vs-Intel-i7-10870H-vs-Intel-i7-10750H/2475vs3856vs3657
+        https://www.videocardbenchmark.net/compare/GeForce-RTX-3060-Laptop-GPU-vs-GeForce-RTX-2060-vs-GeForce-GTX-1650-Ti/4342vs4037vs4195
