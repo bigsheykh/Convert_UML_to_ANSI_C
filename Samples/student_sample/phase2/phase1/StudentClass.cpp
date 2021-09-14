@@ -3,12 +3,12 @@
 
 Student::Student(int number_of_professors)
 {
-	professors = new FixedSizeString[number_of_professors];
+	// professors = new FixedSizeString[number_of_professors];
 }
 
 Student::Student(class FixedSizeString the_name, int number_of_professors)
 {
-	professors = new FixedSizeString[number_of_professors];
+	// professors = new FixedSizeString[number_of_professors];
 	student_name = the_name;
 }
 

@@ -28,7 +28,7 @@ public class Phase2CodeFileManipulator {
         NEW_LINE, RETURN_LINE,
     }
 
-    private FileType fileType;
+    private final FileType fileType;
     private DiagramInfo diagramInfo;
 
     private Vector<Pair<TokenTypes,String>> pairVector;
@@ -48,16 +48,16 @@ public class Phase2CodeFileManipulator {
     private int numberOfTypeDetailAdded;
     private int numberOfIDCalled;
     private int depthOfParenthesis;
-
     private int depthOfCurlyBracket;
-    private int depthOfSquareBracket;
-    
+
     private FileWriter writer;
 
     public Phase2CodeFileManipulator(FileType type, Path path, DiagramInfo diagramInfo) {
         this.fileType = type;
         this.diagramInfo = diagramInfo;
         Vector<Pair<TokenTypes, String>>  tokens = LexicalAnalyzer.getTokensOfPhase2Files(path.normalize().toString());
+        if(tokens == null)
+            return;
         String valueOfPath = String.valueOf(path);
         if(type.equals(FileType.CPP))
             valueOfPath = valueOfPath.substring(0, valueOfPath.length() - 2);
@@ -80,7 +80,7 @@ public class Phase2CodeFileManipulator {
             e.printStackTrace();
         }
     }
-    
+
     private void printStringLine(String str,boolean addTab)
     {
         write(newLine);
@@ -156,14 +156,14 @@ public class Phase2CodeFileManipulator {
     private void decreaseParenthesis()
     {
         if(pairVector.lastElement().getValue0().equals(TokenTypes.ATTRIBUTE))
-            pairVector.remove(pairVector.size() - 1);
+            popLastPairVectorElement();
         depthOfParenthesis--;
     }
 
     private void increaseParenthesis()
     {
         depthOfParenthesis++;
-        if(depthOfParenthesis == 1)
+        if(depthOfCurlyBracket == 0)
             switch (locationState) {
                 case OUTSIDE:
                     locationState = LocationState.FUNCTION;
@@ -175,6 +175,12 @@ public class Phase2CodeFileManipulator {
                             unionKeyword + whiteSpace + locationClass + star + whiteSpace + thisManipulated));
                     pairVector.add(new Pair<>(TokenTypes.ATTRIBUTE, comma + whiteSpace));
             }
+        else if(pairVector.size() > 2 &&
+                pairVector.elementAt(pairVector.size() - 3).getValue0().equals(TokenTypes.DOT))
+            methodCallHandler(false);
+        else if(pairVector.size() > 2 &&
+                pairVector.elementAt(pairVector.size() - 3).getValue0().equals(TokenTypes.ARROW))
+            methodCallHandler(true);
     }
 
     private void printfClosingCPPFunctions()
@@ -184,6 +190,50 @@ public class Phase2CodeFileManipulator {
             write(sharp + undefKeyword + whiteSpace + method + newLine);
         for (String attribute: diagramInfo.getAttributes(locationClass))
             write(sharp + undefKeyword + whiteSpace + attribute + newLine);
+    }
+
+    private int findMethodCallerBlock()
+    {
+        int prBalance = 0;
+        int tokenPalace = pairVector.size() - 1;
+        while (tokenPalace > -1 && (!pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.ID) ||
+                pairVector.elementAt(tokenPalace -1).getValue0().equals(TokenTypes.ARROW) ||
+                pairVector.elementAt(tokenPalace -1).getValue0().equals(TokenTypes.DOT)))
+        {
+            if(pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.CLOSE_PARENTHESIS))
+                prBalance = 1;
+            tokenPalace --;
+            while (tokenPalace > -1 && prBalance !=0)
+            {
+                if(pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.CLOSE_PARENTHESIS))
+                    prBalance ++;
+                else if(pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.OPEN_PARENTHESIS))
+                    prBalance --;
+                tokenPalace--;
+            }
+        }
+        return Math.max(0, tokenPalace);
+    }
+
+    private void popLastPairVectorElement()
+    {
+        pairVector.removeElementAt(pairVector.size() - 1);
+    }
+
+    private void methodCallHandler(boolean pointer)
+    {
+        System.out.println("HEY");
+        popLastPairVectorElement();
+        String methodName = pairVector.lastElement().getValue1();
+        popLastPairVectorElement();
+        popLastPairVectorElement();
+        int methodCallPlace = findMethodCallerBlock();
+        pairVector.add(methodCallPlace, new Pair<>(TokenTypes.OPEN_PARENTHESIS, openParenthesis));
+        pairVector.add(methodCallPlace,
+                new Pair<>(TokenTypes.OPEN_PARENTHESIS, openParenthesis + (pointer? "":and)));
+        pairVector.add(methodCallPlace, new Pair<>(TokenTypes.ID, methodName));
+        pairVector.add(new Pair<>(TokenTypes.CLOSE_PARENTHESIS, closeParenthesis));
+        pairVector.add(new Pair<>(TokenTypes.ATTRIBUTE, comma + whiteSpace));
     }
 
     private void decreaseCurlyBracket()
@@ -202,10 +252,6 @@ public class Phase2CodeFileManipulator {
             }
             locationState = LocationState.OUTSIDE;
         }
-        else
-        {
-
-        }
     }
 
     private void printfOpeningCPPFunctions()
@@ -214,10 +260,16 @@ public class Phase2CodeFileManipulator {
         write(thisManipulated + arrow + thisManipulated + whiteSpace + equalSign + whiteSpace + thisManipulated);
         write(newLine);
         for (String method: diagramInfo.getMethods(locationClass))
+        {
             write(sharp + defineKeyword + whiteSpace +
                     method + openParenthesis + ellipsis + closeParenthesis + whiteSpace +
                     method + openParenthesis + thisManipulated + whiteSpace + comma + vaArgsToken + closeParenthesis
                     + newLine);
+            write(sharp + defineKeyword + whiteSpace +
+                    method + openParenthesis + closeParenthesis + whiteSpace +
+                    method + openParenthesis + thisManipulated + closeParenthesis
+                    + newLine);
+        }
         for (String attribute: diagramInfo.getAttributes(locationClass))
             write(sharp + defineKeyword + whiteSpace +
                     attribute + whiteSpace + thisManipulated + arrow + attribute + newLine);
@@ -241,20 +293,6 @@ public class Phase2CodeFileManipulator {
                     break;
             }
         }
-        else
-        {
-
-        }
-    }
-
-    private void decreaseSquareBracket()
-    {
-        depthOfSquareBracket --;
-    }
-
-    private void increaseSquareBracket()
-    {
-        depthOfSquareBracket ++;
     }
 
     private void addID()
@@ -275,7 +313,7 @@ public class Phase2CodeFileManipulator {
     private void destructorSignShowedUp()
     {
         locationClass = lastClassCalled;
-        pairVector.removeElementAt(pairVector.size() - 1);
+        popLastPairVectorElement();
         pairVector.add(new Pair<>(TokenTypes.DESTRUCT, voidKeyword + whiteSpace + destructorKeyword));
         locationState = LocationState.DESTRUCTOR;
     }
@@ -283,7 +321,7 @@ public class Phase2CodeFileManipulator {
     private void internalMethodShowedUp()
     {
         locationClass = lastClassCalled;
-        pairVector.removeElementAt(pairVector.size() - 1);
+        popLastPairVectorElement();
         if(numberOfIDCalled > 0 || numberOfTypeSpecifierCalled - numberOfClassCalled > 0)
             locationState = LocationState.METHOD;
         else
@@ -293,22 +331,7 @@ public class Phase2CodeFileManipulator {
         }
     }
 
-    private void dotCall()
-    {
-
-    }
-
-    private void arrowCall()
-    {
-
-    }
-
     private void pointerAdded()
-    {
-
-    }
-
-    private void referenceCall()
     {
 
     }
@@ -333,7 +356,6 @@ public class Phase2CodeFileManipulator {
     {
         this.depthOfParenthesis = 0;
         this.depthOfCurlyBracket = 0;
-        this.depthOfSquareBracket = 0;
         this.locationState = LocationState.OUTSIDE;
         resetLineState();
         this.pairVector = new Vector<>();
@@ -361,16 +383,16 @@ public class Phase2CodeFileManipulator {
                     flush();
                     break;
                 case OPEN_SQUARE_BRACKET:
-                    pairVector.add(token);
-                    increaseSquareBracket();
-                    break;
                 case CLOSE_SQUARE_BRACKET:
+                case NEW:
+                case DOT:
+                case ARROW:
+                case REFERENCE:
                     pairVector.add(token);
-                    decreaseSquareBracket();
                     break;
                 case EMPTY_STRING:
                 case COMMENT:
-                    if(pairVector.size() ==0 || !pairVector.lastElement().getValue0().equals(TokenTypes.NEW))
+                    if(pairVector.size() == 0 || !pairVector.lastElement().getValue0().equals(TokenTypes.NEW))
                         pairVector.add(new Pair<>(TokenTypes.IGNORE, token.getValue1()));
                     break;
                 case ID:
@@ -417,19 +439,8 @@ public class Phase2CodeFileManipulator {
                 case SIZEOF:
                     pairVector.add(new Pair<>(TokenTypes.SEPARATOR, token.getValue1()));
                     break;
-                case NEW:
-                    pairVector.add(token);
-                    break;
                 case DOUBLE_COLON:
                     internalMethodShowedUp();
-                    break;
-                case DOT:
-                    pairVector.add(token);
-                    dotCall();
-                    break;
-                case ARROW:
-                    pairVector.add(token);
-                    arrowCall();
                     break;
                 case DESTRUCT:
                     destructorSignShowedUp();
@@ -437,10 +448,6 @@ public class Phase2CodeFileManipulator {
                 case STAR:
                     pairVector.add(token);
                     pointerAdded();
-                    break;
-                case REFERENCE:
-                    pairVector.add(token);
-                    referenceCall();
                     break;
                 case STRUCT:
                 case UNION:

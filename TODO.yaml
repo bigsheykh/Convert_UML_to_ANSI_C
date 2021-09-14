@@ -27,7 +27,6 @@ Phase2CodeGeneration:
     d: cast (optional)
     e: method call
     g: ()
-    h: []
     Db: destructor
       I: "delete"
       II: }
@@ -53,31 +52,6 @@ Phase2CodeGeneration:
     class *m = new class V[]
       use malloc
       use array constructor
-
-    method:
-      v->m(---)
-        use m(v,---)
-      v.m(---)
-        use m(&(v), ---)
-
-    destructor:
-      delete x
-    destructor x
-      delete[] x
-      destructor all x
-
-
-    cpp:
-      ID::ID(---)
-      change constructor signature
-      ID::~ID()
-      change destructor signature
-      type ID::name(----)
-      change method signature
-
-
-      detect attributes without this
-      detect methods without this
 
 
 
