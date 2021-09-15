@@ -19,36 +19,15 @@ union FixedSizeString
 	};
 };
 
-void set_chars(union FixedSizeString* this, char* characters, int size_of_string)
-{
-	set_chars(&(this->unionString), characters, size_of_string);
-}
-char* get_chars(union FixedSizeString* this)
-{
-	return get_chars(&(this->unionString));
-}
+void set_chars(union FixedSizeString* this, char* characters, int size_of_string);
+char* get_chars(union FixedSizeString* this);
 
 void constructorFixedSizeString(union FixedSizeString* this);
-union FixedSizeString* newFixedSizeString()
-{
-	union FixedSizeString* this = (union FixedSizeString*) malloc(sizeof(unionFixedSizeString));
-	constructorFixedSizeString(this);
-	return this;
-}
-
+union FixedSizeString* newFixedSizeString();
 void constructorFixedSizeString(union FixedSizeString* this, int size_of_string);
-union FixedSizeString* newFixedSizeString(int size_of_string)
-{
-	union FixedSizeString* this = (union FixedSizeString*) malloc(sizeof(unionFixedSizeString));
-	constructorFixedSizeString(this, size_of_string);
-	return this;
-}
-
+union FixedSizeString* newFixedSizeString(int size_of_string);
 
 void destructorFixedSizeString(union FixedSizeString* this);
-void delete(union FixedSizeString* this)
-{
-	destructorFixedSizeString(this);
-}
+void delete(union FixedSizeString* this);
 
 #endif

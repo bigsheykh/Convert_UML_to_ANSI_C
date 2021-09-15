@@ -13,45 +13,12 @@ diagramGUI:
   3: make 2 phase controller
   4: redesign info getter
 
-Phase1CodeGeneration:
+CodeGeneration:
   1: output status if failed and when it failed (do it for first and final)
   2: result dependency (do it for first and final)
   3: check header upper method call
-
-Phase2CodeGeneration:
-  2: edit c files
-    a : constructor
-     I: definiton
-     II: "new"
-    c: "class" -> "union"
-    d: cast (optional)
-    e: method call
-    g: ()
-    Db: destructor
-      I: "delete"
-      II: }
-    Df: {}
-
-
-  detail:
-
-    see class X -> union X
-      if(--- is not a pointer)
-        sizeof(---) do nothing
-    optinal: (---) v -> v.union---
-
-    constructor: (if it's not param)
-      class v m (if pointer = 0)
-        use constructor(&m)
-      class v m(--)
-        use constructor(&m, --)
-      class *m = new class V(--)
-        use malloc
-        use constructor(m, --)
-
-    class *m = new class V[]
-      use malloc
-      use array constructor
+  4: free function
+  5: generic
 
 
 

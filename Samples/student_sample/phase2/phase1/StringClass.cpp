@@ -1,3 +1,5 @@
+#include "StringClass.h"
+
 void String::set_chars(char* characters, int size_of_string)
 {
 	this->all = characters;

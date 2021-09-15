@@ -11,11 +11,11 @@ void tm(class FixedSizeString pro)
 int main()
 {
     class Student vm(7);
-    class FixedSizeString fixed();
+    class FixedSizeString fixed(),notFixed;
     char *student_name = "Amirreza";
     int i = 0;
-    vm.student_name.set_chars(X);
-    for(i = 0;i< 7;i++)
-        tm(*vm.professors[i]);
+    vm.student_name.set_chars(student_name, 12);
+    // for(i = 0;i< 7;i++)
+    //     tm(vm.professors[i]);
     printf("%s", student_name);
 }

@@ -17,7 +17,7 @@ class FixedSizeString Student::get_professor(int number)
 	return professors[number];
 }
 
-void Student::set_professor(int number, FixedSizeString professor_name)
+void Student::set_professor(int number, class FixedSizeString professor_name)
 {
 	professors[number] = professor_name;
 }

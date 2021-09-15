@@ -16,10 +16,8 @@ public class Phase2CodeGenerator {
 
     private void addPath(Phase2CodeFileManipulator.FileType type, Path path)
     {
-        System.out.println(path);
         Phase2CodeFileManipulator fileManipulator = new Phase2CodeFileManipulator(type, path, diagramInfo);
         files.add(fileManipulator);
-        //TODO other instructions
     }
 
     public Phase2CodeGenerator(String diagramInfoDirectory, String phase1Directory, String otherCFiles, String headers)
@@ -42,7 +40,8 @@ public class Phase2CodeGenerator {
                     .forEach(item -> addPath(Phase2CodeFileManipulator.FileType.C ,item));
 
             Files.find(Paths.get(headers),Integer.MAX_VALUE,
-                            (filePath, fileAttr) -> fileAttr.isRegularFile() && (filePath.toString().endsWith(".h")))
+                            (filePath, fileAttr) -> fileAttr.isRegularFile() &&
+                                    (filePath.toString().endsWith(".c") || filePath.toString().endsWith(".h")))
                     .forEach(item -> addPath(Phase2CodeFileManipulator.FileType.H, item));
 
             Files.find(Paths.get(phase1Directory),Integer.MAX_VALUE

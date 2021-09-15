@@ -61,6 +61,7 @@ public interface CLanguageTokens {
     String attributeKeyword = "attribute";
     String newKeyword = "new";
     String deleteKeyword = "delete";
+    String deleteManipulate = "delete_keyword";
     String mallocKeyword = "malloc";
     String sizeofKeyword = "sizeof";
     String freeKeyword = "free";

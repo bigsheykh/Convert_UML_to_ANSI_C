@@ -1,5 +1,7 @@
 package com.project.phase2CodeGeneration;
 
+import com.project.classBaseUML.ClassAttribute;
+import com.project.classBaseUML.ValueType;
 import com.project.lexicalAnalyzer.CLanguageTokens;
 import com.project.lexicalAnalyzer.LexicalAnalyzer;
 import com.project.lexicalAnalyzer.TokenTypes;
@@ -25,15 +27,14 @@ public class Phase2CodeFileManipulator {
     }
 
     enum LineState{
-        NEW_LINE, RETURN_LINE,
+        NEW_LINE, RETURN_LINE, POSSIBLY_INITIALIZER, DEFINITELY_NOT_A_INITIALIZER
     }
 
     private final FileType fileType;
-    private DiagramInfo diagramInfo;
+    private final DiagramInfo diagramInfo;
 
     private Vector<Pair<TokenTypes,String>> pairVector;
     private Vector<Vector<CompleteAttribute>> variableStack;
-    private Vector<Pair<CompleteAttribute,Vector<String>>> constructorStack;
 
     private LocationState locationState;
     private String locationClass;
@@ -104,7 +105,8 @@ public class Phase2CodeFileManipulator {
 
     private void flush()
     {
-        // TODO add cache
+        if(lineState.equals(LineState.POSSIBLY_INITIALIZER))
+            initializersHandler();
         for(Pair<TokenTypes,String> token:pairVector) {
             write(token.getValue1());
         }
@@ -123,6 +125,79 @@ public class Phase2CodeFileManipulator {
 
     }
 
+    private Vector<Vector<Pair<TokenTypes,String>>> separateByComma(int begin, int end)
+    {
+        Vector<Vector<Pair<TokenTypes,String>>> returnValue = new Vector<>();
+        Vector<Pair<TokenTypes,String>> cache = new Vector<>();
+        int prBalance = 0;
+
+        for (int i = begin; i < end;i++)
+            if (pairVector.elementAt(i).getValue0().equals(TokenTypes.COMMA) && prBalance == 0)
+            {
+                returnValue.add(cache);
+                cache = new Vector<>();
+            }
+            else
+            {
+                cache.add(pairVector.elementAt(i));
+                if(pairVector.elementAt(i).getValue0().equals(TokenTypes.OPEN_PARENTHESIS))
+                    prBalance++;
+                else if(pairVector.elementAt(i).getValue0().equals(TokenTypes.CLOSE_PARENTHESIS))
+                    prBalance--;
+            }
+        returnValue.add(cache);
+        return returnValue;
+    }
+
+    private Vector<Pair<TokenTypes,String>> manipulateForInitialize(Vector<Pair<TokenTypes,String>> theVector)
+    {
+        String id = "";
+        for(int i = 0; i < theVector.size();i++)
+            if(theVector.get(i).getValue0().equals(TokenTypes.OPEN_PARENTHESIS))
+            {
+                variableStack.lastElement().add(new CompleteAttribute(new ClassAttribute<>(
+                    new ValueType(firstClassCalled, 0), id)));
+                theVector.add(i, new Pair<>(TokenTypes.OPERATOR_OR_ASSIGN,
+                        whiteSpace + equalSign + whiteSpace +
+                                star + Phase1CodeGenerator.generateNewName(firstClassCalled)));
+                break;
+            }
+            else if(theVector.get(i).getValue0().equals(TokenTypes.ID))
+                id = theVector.get(i).getValue1();
+        return theVector;
+    }
+
+    private void initializersHandler()
+    {
+        Vector<Vector<Pair<TokenTypes,String>>> separated = separateByComma(0, pairVector.size());
+        boolean foundClass = false;
+        for(Pair<TokenTypes, String> pair:separated.elementAt(0))
+            if (!foundClass)
+                switch (pair.getValue0())
+                {
+                    case OPEN_PARENTHESIS:
+                    case OPERATOR_OR_ASSIGN:
+                    case ID:
+                    case THIS:
+                    case STAR:
+                    case NEW:
+                    case ARROW:
+                    case SEMI_COLON:
+                        return;
+                    case CLASS_TYPE:
+                        foundClass = true;
+                        break;
+                }
+
+        pairVector = new Vector<>();
+        for (int i = 0 ; i < separated.size();i++)
+        {
+            if(i != 0)
+                pairVector.add(new Pair<>(TokenTypes.COMMA, comma));
+            pairVector.addAll(manipulateForInitialize(separated.elementAt(i)));
+        }
+    }
+
     private void addStack()
     {
         this.variableStack.add(new Vector<>());
@@ -137,12 +212,13 @@ public class Phase2CodeFileManipulator {
                     this.depthOfCurlyBracket + (lineState.equals(LineState.RETURN_LINE)? 1:0))));
 
             if(diagramInfo.isHaveDestructor(attribute.getValueType().getTypeName()))
-                builder.append(deleteKeyword);
-            else
-                builder.append(freeKeyword);
+                builder.append(deleteManipulate);
+//            else
+//                builder.append(freeKeyword);
 
-            builder.append(openParenthesis).append(and).append(attribute.getName())
-                    .append(closeParenthesis).append(semiColon).append(newLine);
+            if(diagramInfo.isHaveDestructor(attribute.getValueType().getTypeName()))
+                builder.append(openParenthesis).append(and).append(attribute.getName())
+                        .append(closeParenthesis).append(semiColon).append(newLine);
             write(builder.toString());
         }
     }
@@ -222,7 +298,6 @@ public class Phase2CodeFileManipulator {
 
     private void methodCallHandler(boolean pointer)
     {
-        System.out.println("HEY");
         popLastPairVectorElement();
         String methodName = pairVector.lastElement().getValue1();
         popLastPairVectorElement();
@@ -258,17 +333,17 @@ public class Phase2CodeFileManipulator {
     {
         write(newLine);
         write(thisManipulated + arrow + thisManipulated + whiteSpace + equalSign + whiteSpace + thisManipulated);
-        write(newLine);
+        write(semiColon + newLine);
         for (String method: diagramInfo.getMethods(locationClass))
         {
             write(sharp + defineKeyword + whiteSpace +
                     method + openParenthesis + ellipsis + closeParenthesis + whiteSpace +
                     method + openParenthesis + thisManipulated + whiteSpace + comma + vaArgsToken + closeParenthesis
                     + newLine);
-            write(sharp + defineKeyword + whiteSpace +
-                    method + openParenthesis + closeParenthesis + whiteSpace +
-                    method + openParenthesis + thisManipulated + closeParenthesis
-                    + newLine);
+//            write(sharp + defineKeyword + whiteSpace +
+//                    method + openParenthesis + closeParenthesis + whiteSpace +
+//                    method + openParenthesis + thisManipulated + closeParenthesis
+//                    + newLine);
         }
         for (String attribute: diagramInfo.getAttributes(locationClass))
             write(sharp + defineKeyword + whiteSpace +
@@ -322,7 +397,8 @@ public class Phase2CodeFileManipulator {
     {
         locationClass = lastClassCalled;
         popLastPairVectorElement();
-        if(numberOfIDCalled > 0 || numberOfTypeSpecifierCalled - numberOfClassCalled > 0)
+        if(numberOfIDCalled > 0 || numberOfTypeSpecifierCalled - numberOfClassCalled > 0 || numberOfClassCalled > 1
+            || numberOfClassKeywordCalled > 0 || numberOfStructureKeywordCalled > 0)
             locationState = LocationState.METHOD;
         else
         {
@@ -331,16 +407,11 @@ public class Phase2CodeFileManipulator {
         }
     }
 
-    private void pointerAdded()
-    {
-
-    }
-
     private void classTypeCalled()
     {
-//        lineState = LineState.NEW_LINE;
-
-        if(numberOfClassCalled == 0)
+        if (lineState == LineState.NEW_LINE && !locationState.equals(LocationState.OUTSIDE))
+            lineState = LineState.POSSIBLY_INITIALIZER;
+        if (numberOfClassCalled == 0)
             firstClassCalled = lastClassCalled;
         numberOfClassCalled ++;
         numberOfTypeSpecifierCalled ++;
@@ -352,6 +423,12 @@ public class Phase2CodeFileManipulator {
         numberOfClassKeywordCalled++;
     }
 
+    private void changeToDefinitelyNotAInitializer()
+    {
+        if (!lineState.equals(LineState.RETURN_LINE))
+            lineState = LineState.DEFINITELY_NOT_A_INITIALIZER;
+    }
+
     private void generatePhase2(Vector<Pair<TokenTypes, String>> tokens)
     {
         this.depthOfParenthesis = 0;
@@ -360,7 +437,6 @@ public class Phase2CodeFileManipulator {
         resetLineState();
         this.pairVector = new Vector<>();
         this.variableStack = new Vector<>();
-        this.constructorStack = new Vector<>();
 
         for(Pair<TokenTypes, String> token:tokens)
             switch (token.getValue0())
@@ -388,6 +464,7 @@ public class Phase2CodeFileManipulator {
                 case DOT:
                 case ARROW:
                 case REFERENCE:
+                case STAR:
                     pairVector.add(token);
                     break;
                 case EMPTY_STRING:
@@ -428,31 +505,36 @@ public class Phase2CodeFileManipulator {
                     pairVector.add(new Pair<>(TokenTypes.TYPE_DETAIL, token.getValue1()));
                     typeDetailAdded();
                     break;
+                case ELLIPSIS:
+                case TILDA:
+                    changeToDefinitelyNotAInitializer();
+                    pairVector.add(new Pair<>(TokenTypes.SEPARATOR, token.getValue1()));
+                    break;
+                case DELETE:
+                    changeToDefinitelyNotAInitializer();
+                    pairVector.add(new Pair<>(TokenTypes.SEPARATOR, deleteManipulate));
+                    break;
                 case OPERATOR_OR_ASSIGN:
                 case STRING:
                 case NUMBER:
-                case ELLIPSIS:
-                case TILDA:
                 case COMMA:
                 case MALLOC:
-                case DELETE:
                 case SIZEOF:
                     pairVector.add(new Pair<>(TokenTypes.SEPARATOR, token.getValue1()));
                     break;
                 case DOUBLE_COLON:
+                    changeToDefinitelyNotAInitializer();
                     internalMethodShowedUp();
                     break;
                 case DESTRUCT:
+                    changeToDefinitelyNotAInitializer();
                     destructorSignShowedUp();
-                    break;
-                case STAR:
-                    pairVector.add(token);
-                    pointerAdded();
                     break;
                 case STRUCT:
                 case UNION:
                 case TYPES:
                 case ENUM:
+                    changeToDefinitelyNotAInitializer();
                     pairVector.add(new Pair<>(TokenTypes.TYPE_SPECIFIER, token.getValue1()));
                     typeSpecifierAdded();
                     break;
@@ -462,9 +544,13 @@ public class Phase2CodeFileManipulator {
                     break;
                 case UNKNOWN:
                 case MACRO:
-                case SEMI_COLON:
                 case COLON:
                 case RESERVED_KEYWORD:
+                    changeToDefinitelyNotAInitializer();
+                    pairVector.add(token);
+                    flush();
+                    break;
+                case SEMI_COLON:
                     pairVector.add(token);
                     flush();
                     break;
