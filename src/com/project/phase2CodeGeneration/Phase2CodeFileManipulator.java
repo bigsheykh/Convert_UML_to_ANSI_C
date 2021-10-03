@@ -159,12 +159,16 @@ public class Phase2CodeFileManipulator {
                     new ValueType(firstClassCalled, 0), id)));
                 theVector.add(i, new Pair<>(TokenTypes.OPERATOR_OR_ASSIGN,
                         whiteSpace + equalSign + whiteSpace +
-                                star + Phase1CodeGenerator.generateNewName(firstClassCalled)));
+                                star + generateNewName(firstClassCalled)));
                 break;
             }
             else if(theVector.get(i).getValue0().equals(TokenTypes.ID))
                 id = theVector.get(i).getValue1();
         return theVector;
+    }
+
+    private String generateNewName(String className) {
+        return newKeyword + className;
     }
 
     private void initializersHandler()

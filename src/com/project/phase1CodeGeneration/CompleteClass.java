@@ -30,7 +30,7 @@ public class CompleteClass extends
         for(Object method:structure.getMethods())
             getMethods().add(new CompleteMethod((ClassMethod) method, getName()));
         for(Object constructor:structure.getConstructors())
-            getConstructors().add(new CompleteConstructor((ClassConstructor) constructor));
+            getConstructors().add(new CompleteConstructor((ClassConstructor) constructor, getName()));
         successCode = modifyByParents(getName(), diagram.getClasses(), 1);
 
     }

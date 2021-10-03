@@ -6,6 +6,7 @@ import com.project.classBaseUML.DescriptiveMember;
 import com.project.classBaseUML.ValueType;
 
 import static com.project.lexicalAnalyzer.CLanguageTokens.*;
+import static com.project.phase1CodeGeneration.Phase1CodeGenerator.*;
 
 public class CompleteMethod extends ClassMethod<CompleteValueType, CompleteAttribute> {
 
@@ -37,5 +38,21 @@ public class CompleteMethod extends ClassMethod<CompleteValueType, CompleteAttri
         allLines.append(semiColon).append(newLine).append(closeCurlyBracket).append(newLine);
         return allLines.toString();
     }
+
+    public String generateMethodDefinition()
+    {
+        StringBuilder allLines = new StringBuilder();
+        allLines.append(getShowName(CompleteAttribute.generateAttributeThisText(className)));
+        return allLines.toString();
+    }
+
+    public String generateMethod()
+    {
+        String baseClassName = getReturnValueType().getShowName() + whiteSpace + className + doubleColon;
+        return baseClassName +
+                getShowName().substring(getReturnValueType().getShowName().length() + 1)
+                + EmptyBlock;      // TODO use @StringBuilder
+    }
+
 
 }
