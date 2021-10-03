@@ -20,7 +20,7 @@ class Lexer:
         'ELSE', 'ENUM', 'EXTERN', 'FLOAT', 'FOR', 'GOTO', 'IF', 'INT', 'LONG', 'REGISTER',
         'RETURN', 'SHORT', 'SIGNED', 'SIZEOF', 'STATIC', 'STRUCT', 'SWITCH', 'TYPEDEF',
         'UNION', 'UNSIGNED', 'VOID', 'VOLATILE', 'WHILE',  'CLASS', 'THIS' , 'MALLOC', 'NEW',
-        'DELETE', 'PARENT', 'CONSTRUCTOR', 'DESTRUCTOR', 'METHOD', 'ATTRIBUTE'
+        'DELETE', 'PARENT', 'CONSTRUCTOR', 'DESTRUCTOR', 'METHOD', 'ATTRIBUTE', 'BACKSLASH'
     )
 
     tokens = reserved + (
@@ -125,10 +125,10 @@ class Lexer:
     t_DESTRUCT = r'::~'
     t_COLON = r':'
     t_ELLIPSIS = r'\.\.\.'
-    t_preprocessor = r'\#(.)*?\n'
+    t_preprocessor = r'\#(.|(\\\n))*'
     t_comment = r'/\*(.|\n)*?\*/'
     t_LINECOMMENT = r'//.*'
-
+    t_BACKSLASH = r'\\'
     # Identifiers and reserved words
     def t_ID(self, t):
         r'[A-Za-z_][\w_]*'

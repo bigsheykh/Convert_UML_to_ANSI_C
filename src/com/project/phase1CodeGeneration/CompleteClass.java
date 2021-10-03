@@ -35,7 +35,10 @@ public class CompleteClass extends
             getConstructors().add(new CompleteConstructor((ClassConstructor) constructor, getName()));
         successCode = modifyByParents(getName(), diagram.getClasses(), 1);
         hashAdded = MethodOverloader.randomGenerator();
-        MethodOverloader.addToTable(deleteManipulate, mangledDeleteName(), getName(), new Vector<>());
+        if(isHavingDestructor())
+            MethodOverloader.addToTable(deleteManipulate, mangledDeleteName(), getName(), new Vector<>());
+        for(CompleteMethod method:getAllMethods())
+            method.addToTable();
     }
 
     public String getPhase2Info()
@@ -141,7 +144,7 @@ public class CompleteClass extends
 
     private String mangledDeleteName()
     {
-        return deleteKeyword + hashAdded;
+        return deleteManipulate + hashAdded;
     }
     public String generateDeleteDefinition()
     {

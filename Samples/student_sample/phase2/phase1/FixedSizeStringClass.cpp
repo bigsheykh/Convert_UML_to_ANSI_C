@@ -1,19 +1,19 @@
-#include "FixedSizeStringClass.h"
+#include "overload.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-FixedSizeString::FixedSizeString()
+FixedSizeString::FixedSizeString_05ltxcABX()
 {
-	all = (char *) malloc(25);
+	this->all = (char *) malloc(25);
 }
 
-FixedSizeString::FixedSizeString(int size_of_string)
+FixedSizeString::FixedSizeString_27gidrYIq(int size_of_string)
 {
-	all = (char *) malloc(size_of_string);
+	this->all = (char *) malloc(size_of_string);
 }
 
 FixedSizeString::~FixedSizeString()
 {
-	free(all);
+	free(this->all);
 }
 

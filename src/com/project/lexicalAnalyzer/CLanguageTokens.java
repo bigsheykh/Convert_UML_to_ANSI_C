@@ -44,6 +44,7 @@ public interface CLanguageTokens {
     String lineComment = "//";
     String whiteSpace = " ";
     String sharp = "#";
+    String backSlashNewLine = "\\\n";
 
     String includeKeyword = "include";
     String defineKeyword = "define";

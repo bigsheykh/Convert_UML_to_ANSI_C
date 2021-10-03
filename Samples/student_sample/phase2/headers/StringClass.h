@@ -17,8 +17,8 @@ union String
 	};
 };
 
-void set_chars(union String* this, char* characters, int size_of_string);
-char* get_chars(union String* this);
+void set_chars_RxEHHuadD(union String* this, char* characters, int size_of_string);
+char* get_chars_aN0RIzoj0(union String* this);
 
 
 #endif

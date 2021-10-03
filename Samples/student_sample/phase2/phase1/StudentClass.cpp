@@ -1,25 +1,24 @@
-#include "FixedSizeStringClass.h"
-#include "StudentClass.h"
+#include "overload.h"
 
-Student::Student(int number_of_professors)
+Student::Student_EvYa3CERu(int number_of_professors)
 {
 	// professors = new FixedSizeString[number_of_professors];
 }
 
-Student::Student(class FixedSizeString the_name, int number_of_professors)
+Student::Student_baf15zIog(class FixedSizeString the_name, int number_of_professors)
 {
 	// professors = new FixedSizeString[number_of_professors];
-	student_name = the_name;
+	this->student_name = the_name;
 }
 
-class FixedSizeString Student::get_professor(int number)
+class FixedSizeString Student::get_professor_jnL1u6L1w(int number)
 {
-	return professors[number];
+	return this->professors[number];
 }
 
-void Student::set_professor(int number, class FixedSizeString professor_name)
+void Student::set_professor_G42ARCkI6(int number, class FixedSizeString professor_name)
 {
-	professors[number] = professor_name;
+	this->professors[number] = professor_name;
 }
 
 Student::~Student()

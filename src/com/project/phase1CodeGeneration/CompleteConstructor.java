@@ -32,7 +32,7 @@ public class CompleteConstructor extends ClassConstructor<CompleteValueType, Com
 
     public String generateConstructor()
     {
-        String baseClassName = className + doubleColon + className;
+        String baseClassName = className + doubleColon + className + hashAdded;
         return baseClassName + getShowName() + EmptyBlock;      // TODO use @StringBuilder
     }
 

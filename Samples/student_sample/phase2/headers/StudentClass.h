@@ -18,15 +18,15 @@ union Student
 	};
 };
 
-class FixedSizeString get_professor(union Student* this, int number);
-void set_professor(union Student* this, int number, class FixedSizeString professor_name);
+class FixedSizeString get_professor_0lebQZOyj(union Student* this, int number);
+void set_professor_XJ7DnUl62(union Student* this, int number, class FixedSizeString professor_name);
 
-void constructorStudent(union Student* this, int number_of_professors);
-union Student* newStudent(int number_of_professors);
-void constructorStudent(union Student* this, class FixedSizeString the_name, int number_of_professors);
-union Student* newStudent(class FixedSizeString the_name, int number_of_professors);
+void constructorStudent_EvYa3CERu(union Student* this, int number_of_professors);
+union Student* newStudent_EvYa3CERu(int number_of_professors);
+void constructorStudent_baf15zIog(union Student* this, class FixedSizeString the_name, int number_of_professors);
+union Student* newStudent_baf15zIog(class FixedSizeString the_name, int number_of_professors);
 
 void destructorStudent(union Student* this);
-void delete(union Student* this);
+void delete_keyword_Od7UHBQEk(union Student* this);
 
 #endif

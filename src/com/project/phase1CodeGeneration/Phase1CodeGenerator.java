@@ -32,6 +32,13 @@ public class Phase1CodeGenerator {
                         generateAllClassesHeaderFile(diagram.allClassNames(),"AllClasses.h").getBytes());
                 headersOutputStream.flush();
                 headersOutputStream.close();
+
+                OutputStream overloadOutputStream = new FileOutputStream("headers/overload.h");
+                overloadOutputStream.write(
+                        generateOverloadFile(diagram.allClassNames(), "overload.h").getBytes());
+                overloadOutputStream.flush();
+                overloadOutputStream.close();
+
                 OutputStream allInfoOutputStream = new FileOutputStream("diagram_info/AllClasses.info");
                 allInfoOutputStream.write(diagram.generateClassNamesSeparatedByNewline().getBytes());
                 allInfoOutputStream.flush();
@@ -71,10 +78,27 @@ public class Phase1CodeGenerator {
         }
     }
 
-    private String generateClassC(CompleteClass completeClass, Vector<String> classes) {
+    private String generateOverloadFile(Vector<String> classes, String fileName) {
         StringBuilder allLines = new StringBuilder();
+        allLines.append(generateIncludeGuard(fileName));
+        allLines.append(newLine);
+        allLines.append(sharp + includeKeyword + whiteSpace + lessThanSign + "stdio.h" + greaterThanSign + newLine);
+        allLines.append(sharp + includeKeyword + whiteSpace + lessThanSign + "stdlib.h" + greaterThanSign + newLine);
         for(String className:classes)
             allLines.append(generateIncludeClassHeader(generateHeaderName(className)));
+        allLines.append(newLine);
+        allLines.append(MethodOverloader.generateOverloadMacros());
+        allLines.append(newLine);
+        allLines.append(newLine);
+        allLines.append(generateEndGuard());
+
+        return allLines.toString();
+
+    }
+
+    private String generateClassC(CompleteClass completeClass, Vector<String> classes) {
+        StringBuilder allLines = new StringBuilder();
+        allLines.append(generateIncludeClassHeader("overload.h"));
         allLines.append(newLine);
         allLines.append(generateMethodBody(completeClass.getAllMethodsBasedOnParents(), completeClass.getName()));
         allLines.append(newLine);
@@ -248,10 +272,6 @@ public class Phase1CodeGenerator {
         allLines.append(newLine);
         allLines.append(generateInlineDefinitionOfClass(classes));
         allLines.append(newLine);
-        allLines.append(newLine);
-        allLines.append(MethodOverloader.generateOverloadMacros());
-        allLines.append(newLine);
-        allLines.append(newLine);
         allLines.append(generateEndGuard());
         return allLines.toString();
     }
@@ -313,6 +333,7 @@ public class Phase1CodeGenerator {
     public static String generateClassCPP(CompleteClass completeClass)
     {
         StringBuilder base = new StringBuilder();
+        base.append(generateIncludeClassHeader("overload.h"));
         for(CompleteConstructor constructor:completeClass.getConstructors())
             base.append(constructor.generateConstructor());
         for(CompleteMethod method:completeClass.getMethods())

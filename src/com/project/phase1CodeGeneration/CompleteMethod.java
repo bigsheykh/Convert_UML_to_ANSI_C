@@ -22,9 +22,12 @@ public class CompleteMethod extends ClassMethod<CompleteValueType, CompleteAttri
         realName = method.getName();
         setName(generateMethodName());
         setReturnValueType(new CompleteValueType(method.getReturnValueType()));
+        }
+
+    public void addToTable()
+    {
         MethodOverloader.addToTable(realName, getName(), className, getParams());
     }
-
 
     private String generateMethodName()
     {

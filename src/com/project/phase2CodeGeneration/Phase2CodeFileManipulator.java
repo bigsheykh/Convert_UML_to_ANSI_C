@@ -266,10 +266,10 @@ public class Phase2CodeFileManipulator {
     private void printfClosingCPPFunctions()
     {
         write(newLine);
-        for (String method: diagramInfo.getMethods(locationClass))
-            write(sharp + undefKeyword + whiteSpace + method + newLine);
-        for (String attribute: diagramInfo.getAttributes(locationClass))
-            write(sharp + undefKeyword + whiteSpace + attribute + newLine);
+//        for (String method: diagramInfo.getMethods(locationClass))
+//            write(sharp + undefKeyword + whiteSpace + method + newLine);
+//        for (String attribute: diagramInfo.getAttributes(locationClass))
+//            write(sharp + undefKeyword + whiteSpace + attribute + newLine);
     }
 
     private int findMethodCallerBlock()
@@ -338,20 +338,20 @@ public class Phase2CodeFileManipulator {
         write(newLine);
         write(thisManipulated + arrow + thisManipulated + whiteSpace + equalSign + whiteSpace + thisManipulated);
         write(semiColon + newLine);
-        for (String method: diagramInfo.getMethods(locationClass))
-        {
-            write(sharp + defineKeyword + whiteSpace +
-                    method + openParenthesis + ellipsis + closeParenthesis + whiteSpace +
-                    method + openParenthesis + thisManipulated + whiteSpace + comma + vaArgsToken + closeParenthesis
-                    + newLine);
+//        for (String method: diagramInfo.getMethods(locationClass))
+//        {
 //            write(sharp + defineKeyword + whiteSpace +
-//                    method + openParenthesis + closeParenthesis + whiteSpace +
-//                    method + openParenthesis + thisManipulated + closeParenthesis
+//                    method + openParenthesis + ellipsis + closeParenthesis + whiteSpace +
+//                    method + openParenthesis + thisManipulated + whiteSpace + comma + vaArgsToken + closeParenthesis
 //                    + newLine);
-        }
-        for (String attribute: diagramInfo.getAttributes(locationClass))
-            write(sharp + defineKeyword + whiteSpace +
-                    attribute + whiteSpace + thisManipulated + arrow + attribute + newLine);
+////            write(sharp + defineKeyword + whiteSpace +
+////                    method + openParenthesis + closeParenthesis + whiteSpace +
+////                    method + openParenthesis + thisManipulated + closeParenthesis
+////                    + newLine);
+//        }
+//        for (String attribute: diagramInfo.getAttributes(locationClass))
+//            write(sharp + defineKeyword + whiteSpace +
+//                    attribute + whiteSpace + thisManipulated + arrow + attribute + newLine);
     }
 
     private void increaseCurlyBracket()
