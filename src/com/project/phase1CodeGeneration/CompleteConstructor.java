@@ -16,9 +16,16 @@ public class CompleteConstructor extends ClassConstructor<CompleteValueType, Com
         for(Object param:constructor.getParams())
             getParams().add(new CompleteAttribute((ClassAttribute) param));
         hashAdded = MethodOverloader.randomGenerator();
+        MethodOverloader.addToTable(generateConstructorRealName(), generateConstructorName(), className, getParams());
+        MethodOverloader.addToTable(generateNewRealName(), generateNewName(), null, getParams());
     }
 
     public String generateConstructorName()
+    {
+        return constructorKeyword + className + hashAdded;
+    }
+
+    public String generateConstructorRealName()
     {
         return constructorKeyword + className;
     }
@@ -43,10 +50,14 @@ public class CompleteConstructor extends ClassConstructor<CompleteValueType, Com
     }
 
 
-    /// TODO move to CompleteConstructor
+    public String generateNewRealName()
+    {
+        return newKeyword + className;
+    }
+
     public String generateNewName()
     {
-        return newKeyword + className + hashAdded;
+        return generateNewRealName() + hashAdded;
     }
 
     public String generateConstructorDefinition()

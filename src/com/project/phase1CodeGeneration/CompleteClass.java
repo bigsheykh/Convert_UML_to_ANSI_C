@@ -17,6 +17,8 @@ public class CompleteClass extends
     private final Vector<CompleteAttribute> allAttributes;
     private final Vector<Pair<String, CompleteAttribute>> allAttributesBasedOnParents;
     private final Vector<String> parents;
+    private final String hashAdded;
+
     public CompleteClass(ClassStructure structure, ClassDiagram diagram) {
         super();
         allMethods = new Vector<>();
@@ -32,7 +34,8 @@ public class CompleteClass extends
         for(Object constructor:structure.getConstructors())
             getConstructors().add(new CompleteConstructor((ClassConstructor) constructor, getName()));
         successCode = modifyByParents(getName(), diagram.getClasses(), 1);
-
+        hashAdded = MethodOverloader.randomGenerator();
+        MethodOverloader.addToTable(deleteManipulate, mangledDeleteName(), getName(), new Vector<>());
     }
 
     public String getPhase2Info()
@@ -135,4 +138,46 @@ public class CompleteClass extends
     {
         return name + dot + parentName;
     }
+
+    private String mangledDeleteName()
+    {
+        return deleteKeyword + hashAdded;
+    }
+    public String generateDeleteDefinition()
+    {
+        StringBuilder allLines = new StringBuilder();
+        allLines.append(voidKeyword + whiteSpace + mangledDeleteName())
+                .append(DescriptiveMember.generateParamsTogether(
+                new Vector<>(), CompleteAttribute.generateAttributeThisText(getName())));
+        allLines.append(semiColon).append(newLine);
+        return allLines.toString();
+    }
+
+    String generateDeleteBody() {
+        StringBuilder allLines = new StringBuilder();
+        allLines.append(voidKeyword + whiteSpace + mangledDeleteName())
+                .append(DescriptiveMember.generateParamsTogether(
+                new Vector<>(), CompleteAttribute.generateAttributeThisText(getName())));
+        allLines.append(newLine + openCurlyBracket + newLine);
+        allLines.append(tab).append(generateDestructorName())
+                .append(openParenthesis + thisKeyword + closeParenthesis + semiColon + newLine);
+//        allLines.append(tab + freeKeyword + openParenthesis).append(thisKeyword).append(closeParenthesis)
+//                .append(semiColon).append(newLine);
+        allLines.append(closeCurlyBracket).append(newLine);
+
+        return allLines.toString();
+    }
+
+    public String generateDestructorName()
+    {
+        return destructorKeyword + getName();
+    }
+
+    public String generateDestructorDefinition()
+    {
+        return voidKeyword + whiteSpace + generateDestructorName() +
+                DescriptiveMember.generateParamsTogether(new Vector<>()
+                        , CompleteAttribute.generateAttributeThisText(getName())) + semiColon + newLine;
+    }
+
 }

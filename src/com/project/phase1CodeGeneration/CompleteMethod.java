@@ -11,13 +11,24 @@ import static com.project.phase1CodeGeneration.Phase1CodeGenerator.*;
 public class CompleteMethod extends ClassMethod<CompleteValueType, CompleteAttribute> {
 
     private final String className;
+    private final String hashAdded;
+    private final String realName;
     public CompleteMethod(ClassMethod method, String className) {
         super();
         this.className = className;
         for(Object param:method.getParams())
             getParams().add(new CompleteAttribute((ClassAttribute) param));
-        setName(method.getName());
+        hashAdded = MethodOverloader.randomGenerator();
+        realName = method.getName();
+        setName(generateMethodName());
         setReturnValueType(new CompleteValueType(method.getReturnValueType()));
+        MethodOverloader.addToTable(realName, getName(), className, getParams());
+    }
+
+
+    private String generateMethodName()
+    {
+        return realName + hashAdded;
     }
 
     public String generateMethodUseInDefinition(String parentClassName)
@@ -27,7 +38,7 @@ public class CompleteMethod extends ClassMethod<CompleteValueType, CompleteAttri
         allLines.append(newLine).append(tab);
         if(!getReturnValueType().equals(new ValueType(voidKeyword, 0)))
             allLines.append(returnKeyword).append(whiteSpace);
-        allLines.append(getName());
+        allLines.append(realName);
         allLines.append(openParenthesis);
         allLines.append(and).append(openParenthesis)
                 .append(thisKeyword).append(arrow).append(unionKeyword).append(parentClassName)

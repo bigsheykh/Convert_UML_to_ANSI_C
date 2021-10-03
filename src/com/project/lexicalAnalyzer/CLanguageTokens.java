@@ -50,6 +50,9 @@ public interface CLanguageTokens {
     String undefKeyword = "undef";
     String ifndef = "ifndef";
     String endif = "endif";
+    String choose = "CHOOSE";
+    String iftypeKeyword = "IFTYPE";
+    String select_N = "SELECT_N";
     String thisKeyword = "this";
     String thisManipulated = "this_keyword";
     String constructorKeyword = "constructor";

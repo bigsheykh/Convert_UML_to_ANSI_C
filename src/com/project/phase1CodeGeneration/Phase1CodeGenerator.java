@@ -82,23 +82,9 @@ public class Phase1CodeGenerator {
         allLines.append(newLine);
         if(completeClass.isHavingDestructor())
         {
-            allLines.append(generateDeleteBody(completeClass.getName()));
+            allLines.append(completeClass.generateDeleteBody());
             allLines.append(newLine);
         }
-
-        return allLines.toString();
-    }
-
-    private String generateDeleteBody(String className) {
-        StringBuilder allLines = new StringBuilder();
-        allLines.append(voidKeyword + whiteSpace + deleteKeyword).append(DescriptiveMember.generateParamsTogether(
-                new Vector<>(), CompleteAttribute.generateAttributeThisText(className)));
-        allLines.append(newLine + openCurlyBracket + newLine);
-        allLines.append(tab).append(generateDestructorName(className))
-                .append(openParenthesis + thisKeyword + closeParenthesis + semiColon + newLine);
-//        allLines.append(tab + freeKeyword + openParenthesis).append(thisKeyword).append(closeParenthesis)
-//                .append(semiColon).append(newLine);
-        allLines.append(closeCurlyBracket).append(newLine);
 
         return allLines.toString();
     }
@@ -189,8 +175,8 @@ public class Phase1CodeGenerator {
         allLines.append(newLine);
         if(completeClass.isHavingDestructor())
         {
-            allLines.append(generateDestructorDefinition(completeClass.getName()));
-            allLines.append(generateDeleteDefinition(completeClass.getName()));
+            allLines.append(completeClass.generateDestructorDefinition());
+            allLines.append(completeClass.generateDeleteDefinition());
             allLines.append(newLine);
         }
 
@@ -240,24 +226,6 @@ public class Phase1CodeGenerator {
     }
 
     /// TODO move to CompleteClass
-    public static String generateDestructorDefinition(String className)
-    {
-        return voidKeyword + whiteSpace + generateDestructorName(className) +
-                DescriptiveMember.generateParamsTogether(new Vector<>()
-                        , CompleteAttribute.generateAttributeThisText(className)) + semiColon + newLine;
-    }
-
-    /// TODO move to CompleteClass
-    public static String generateDeleteDefinition(String className)
-    {
-        StringBuilder allLines = new StringBuilder();
-        allLines.append(voidKeyword + whiteSpace + deleteKeyword).append(DescriptiveMember.generateParamsTogether(
-                new Vector<>(), CompleteAttribute.generateAttributeThisText(className)));
-        allLines.append(semiColon).append(newLine);
-        return allLines.toString();
-    }
-
-    /// TODO move to CompleteClass
     public static String generateConstructorDefinitions(Vector<CompleteConstructor> constructors, String className)
     {
         StringBuilder allLines = new StringBuilder();
@@ -267,12 +235,6 @@ public class Phase1CodeGenerator {
             allLines.append(constructor.generateNewDefinition());
         }
         return allLines.toString();
-    }
-
-    /// TODO move to CompleteClass
-    public static String generateDestructorName(String className)
-    {
-        return destructorKeyword + className;
     }
 
     /// TODO move to CompleteDiagram
@@ -285,6 +247,10 @@ public class Phase1CodeGenerator {
         allLines.append(sharp + includeKeyword + whiteSpace + lessThanSign + "stdlib.h" + greaterThanSign + newLine);
         allLines.append(newLine);
         allLines.append(generateInlineDefinitionOfClass(classes));
+        allLines.append(newLine);
+        allLines.append(newLine);
+        allLines.append(MethodOverloader.generateOverloadMacros());
+        allLines.append(newLine);
         allLines.append(newLine);
         allLines.append(generateEndGuard());
         return allLines.toString();
