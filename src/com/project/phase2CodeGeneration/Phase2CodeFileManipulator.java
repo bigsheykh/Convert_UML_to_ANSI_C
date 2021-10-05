@@ -469,6 +469,7 @@ public class Phase2CodeFileManipulator {
                 case ARROW:
                 case REFERENCE:
                 case STAR:
+                case COMMA:
                     pairVector.add(token);
                     break;
                 case EMPTY_STRING:
@@ -521,7 +522,6 @@ public class Phase2CodeFileManipulator {
                 case OPERATOR_OR_ASSIGN:
                 case STRING:
                 case NUMBER:
-                case COMMA:
                 case MALLOC:
                 case SIZEOF:
                     pairVector.add(new Pair<>(TokenTypes.SEPARATOR, token.getValue1()));
