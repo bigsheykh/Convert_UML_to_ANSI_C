@@ -37,8 +37,8 @@ public class CompleteClass extends
         hashAdded = MethodOverloader.randomGenerator();
         if(isHavingDestructor())
             MethodOverloader.addToTable(deleteManipulate, mangledDeleteName(), getName(), new Vector<>());
-        for(CompleteMethod method:getAllMethods())
-            method.addToTable();
+        for(Pair<?,CompleteMethod> method:getAllMethodsBasedOnParents())
+            method.getValue1().addToTable();
     }
 
     public String getPhase2Info()
@@ -90,11 +90,16 @@ public class CompleteClass extends
                         getAttributes().add(newAttribute);
                 }
 
+                if(getName().equals(className))
+                    classStructure = this;
+
                 for(Object method:classStructure.getMethods())
                 {
                     CompleteMethod newMethod = new CompleteMethod((ClassMethod) method, getName());
                     getAllMethodsBasedOnParents().
                             removeIf(completeMethod -> completeMethod.getValue1().equals(newMethod));
+                    allMethods.
+                            removeIf(completeMethod -> completeMethod.equals(newMethod));
                     allMethodsBasedOnParents.add(new Pair<>(className, newMethod));
                     allMethods.add(newMethod);
                 }
@@ -133,7 +138,7 @@ public class CompleteClass extends
     {
         HashSet<String> names = new HashSet<>();
         for(CompleteMethod completeMethod:getAllMethods())
-            names.add(completeMethod.getName());
+            names.add(completeMethod.getRealName());
         return names;
     }
 

@@ -33,4 +33,7 @@ laptop:
         https://www.videocardbenchmark.net/compare/GeForce-RTX-3060-Laptop-GPU-vs-GeForce-RTX-2060-vs-GeForce-GTX-1650-Ti/4342vs4037vs4195
 
   -i Samples/Test1/phase2/diagram_info -h Samples/Test1/phase2/headers -p1 Samples/Test1/phase2/phase1 -c Samples/Test1/phase2/c_files
+  -i Samples/Test2/phase2/diagram_info -h Samples/Test2/phase2/headers -p1 Samples/Test2/phase2/phase1 -c Samples/Test2/phase2/c_files
+  -i Samples/Test3/phase2/diagram_info -h Samples/Test3/phase2/headers -p1 Samples/Test3/phase2/phase1 -c Samples/Test3/phase2/c_files
+  -i Samples/Test4/phase2/diagram_info -h Samples/Test4/phase2/headers -p1 Samples/Test4/phase2/phase1 -c Samples/Test4/phase2/c_files
   -i Samples/student_sample/phase2/diagram_info -h Samples/student_sample/phase2/headers -p1 Samples/student_sample/phase2/phase1 -c Samples/student_sample/phase2/c_files

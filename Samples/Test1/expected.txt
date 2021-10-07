@@ -1,0 +1,6 @@
+input:12
+Nothing is here!
+Destructor called.
+Destructor called.
+input:4
+Destructor called.

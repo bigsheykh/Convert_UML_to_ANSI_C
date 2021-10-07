@@ -81,8 +81,7 @@ public class ClassMethod<TType extends ValueType, T extends ClassAttribute<TType
         if (this == o) return true;
         if (!(o instanceof ClassMethod)) return false;
         ClassMethod<?, ?> that = (ClassMethod<?, ?>) o;
-        if (!name.equals(that.name) || !returnValueType.equals(that.returnValueType) ||
-                that.getParams().size() != getParams().size())
+        if (!name.equals(that.name) || that.getParams().size() != getParams().size())
             return false;
 
         for (int i = 0; i < that.getParams().size(); i++)
