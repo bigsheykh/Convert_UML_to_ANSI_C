@@ -2,7 +2,5 @@ class:Benz
 parent:Car
 constructor:0
 destructor:0
-method:info_gG4VE8SVH
-method:model_BUb2bJfj3
-method:info_0klPTXPmp
-method:model_C9PoYoVFF
+method:model
+method:info

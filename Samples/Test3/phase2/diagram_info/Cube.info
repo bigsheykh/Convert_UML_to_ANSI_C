@@ -3,8 +3,8 @@ parent:Number
 parent:Square
 constructor:0
 destructor:0
-method:get_square_XNMuXshEz
-method:set_number_2pAFupUyz
-method:get_number_Im1lUPzTF
-method:get_cube_cxz4WH7zQ
+method:get_cube
+method:get_square
+method:set_number
+method:get_number
 attribute:number

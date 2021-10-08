@@ -266,10 +266,23 @@ public class Phase2CodeFileManipulator {
     private void printfClosingCPPFunctions()
     {
         write(newLine);
-//        for (String method: diagramInfo.getMethods(locationClass))
-//            write(sharp + undefKeyword + whiteSpace + method + newLine);
-//        for (String attribute: diagramInfo.getAttributes(locationClass))
-//            write(sharp + undefKeyword + whiteSpace + attribute + newLine);
+    }
+
+    boolean isThereAnyCaller(int tokenPalace)
+    {
+        if(tokenPalace == -1)
+            return false;
+        switch (pairVector.elementAt(tokenPalace).getValue0()) {
+            case ID:
+            case ARROW:
+            case DOT:
+            case CLOSE_PARENTHESIS:
+            case CLOSE_SQUARE_BRACKET:
+                return true;
+            case EMPTY_STRING:
+                return isThereAnyCaller(tokenPalace - 1);
+        }
+        return false;
     }
 
     private int findMethodCallerBlock()
@@ -278,20 +291,26 @@ public class Phase2CodeFileManipulator {
         int tokenPalace = pairVector.size() - 1;
         while (tokenPalace > -1 && (!pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.ID) ||
                 pairVector.elementAt(tokenPalace -1).getValue0().equals(TokenTypes.ARROW) ||
-                pairVector.elementAt(tokenPalace -1).getValue0().equals(TokenTypes.DOT)))
+                pairVector.elementAt(tokenPalace -1).getValue0().equals(TokenTypes.DOT)) &&
+                isThereAnyCaller(tokenPalace))
         {
-            if(pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.CLOSE_PARENTHESIS))
+            if(pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.CLOSE_PARENTHESIS) ||
+                    pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.CLOSE_SQUARE_BRACKET))
                 prBalance = 1;
             tokenPalace --;
             while (tokenPalace > -1 && prBalance !=0)
             {
-                if(pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.CLOSE_PARENTHESIS))
+                if(pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.CLOSE_PARENTHESIS)||
+                        pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.CLOSE_SQUARE_BRACKET))
                     prBalance ++;
-                else if(pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.OPEN_PARENTHESIS))
+                else if(pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.OPEN_PARENTHESIS)||
+                        pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.OPEN_SQUARE_BRACKET))
                     prBalance --;
                 tokenPalace--;
             }
         }
+        if(tokenPalace > -1 && !pairVector.elementAt(tokenPalace).getValue0().equals(TokenTypes.ID))
+            tokenPalace++;
         return Math.max(0, tokenPalace);
     }
 
@@ -338,20 +357,6 @@ public class Phase2CodeFileManipulator {
         write(newLine);
         write(thisManipulated + arrow + thisManipulated + whiteSpace + equalSign + whiteSpace + thisManipulated);
         write(semiColon + newLine);
-//        for (String method: diagramInfo.getMethods(locationClass))
-//        {
-//            write(sharp + defineKeyword + whiteSpace +
-//                    method + openParenthesis + ellipsis + closeParenthesis + whiteSpace +
-//                    method + openParenthesis + thisManipulated + whiteSpace + comma + vaArgsToken + closeParenthesis
-//                    + newLine);
-////            write(sharp + defineKeyword + whiteSpace +
-////                    method + openParenthesis + closeParenthesis + whiteSpace +
-////                    method + openParenthesis + thisManipulated + closeParenthesis
-////                    + newLine);
-//        }
-//        for (String attribute: diagramInfo.getAttributes(locationClass))
-//            write(sharp + defineKeyword + whiteSpace +
-//                    attribute + whiteSpace + thisManipulated + arrow + attribute + newLine);
     }
 
     private void increaseCurlyBracket()

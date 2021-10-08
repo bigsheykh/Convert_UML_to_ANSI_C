@@ -1,0 +1,6 @@
+class:Point
+constructor:0
+destructor:0
+method:set
+attribute:x
+attribute:y

@@ -2,7 +2,7 @@ class:Square
 parent:Number
 constructor:0
 destructor:0
-method:set_number_PCiYHO8yM
-method:get_number_HhqFwykBD
-method:get_square_orOP2K4o8
+method:get_square
+method:set_number
+method:get_number
 attribute:number

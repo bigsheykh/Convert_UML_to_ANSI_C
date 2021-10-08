@@ -1,6 +1,6 @@
 class:Number
 constructor:0
 destructor:0
-method:set_number_fdZplofJn
-method:get_number_GVyIjl8aj
+method:set_number
+method:get_number
 attribute:number

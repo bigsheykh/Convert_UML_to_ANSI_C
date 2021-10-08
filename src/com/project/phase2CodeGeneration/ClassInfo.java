@@ -54,6 +54,8 @@ public class ClassInfo {
                 default:
                     return;
             }
+            while (i + 3 < tokens.size() && !tokens.get(i + 3).getValue0().equals(TokenTypes.EMPTY_STRING))
+                i++;
         }
         if(className == null)
             return;

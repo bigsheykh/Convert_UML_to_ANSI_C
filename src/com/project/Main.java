@@ -180,6 +180,7 @@ public class Main implements Runnable{
 //                    System.out.println();
                 if(counter %4 == 0 && result.getDependencyNumber() != 0)
                 {
+                    MethodOverloader.getOverloadTable().clear();
                     CompleteDiagram completeDiagram = new CompleteDiagram(guiDiagram);
                     Phase1CodeGenerator fileGenerator = new Phase1CodeGenerator(completeDiagram);
                     System.out.println("generation success:" + fileGenerator.isSuccessFull());
