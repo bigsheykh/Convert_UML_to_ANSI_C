@@ -55,6 +55,17 @@ public class ClassDiagram<TType extends ValueType, TAttribute extends ClassAttri
             if (tClass.havingSuperClass() && !allClasses.contains(tClass.getSuperClass()))
                 return DescriptiveMember.newStatus(BasicDiagramStatus.NonExistSuperClass,
                         "super Class name:" + tClass.getSuperClass() + " class name:" + tClass.getName());
+            else
+            {
+                for(TAttribute tAttribute:tClass.getAttributes())
+                    if(allClasses.contains(tAttribute.getName()))
+                        return DescriptiveMember.newStatus(BasicDiagramStatus.SameAttributeAndClassName,
+                                "class name is:" + tAttribute.getName());
+                for(TMethod tMethod:tClass.getMethods())
+                    if(allClasses.contains(tMethod.getName()))
+                        return DescriptiveMember.newStatus(BasicDiagramStatus.SameMethodAndClassName,
+                                "name is:" + tMethod.getName());
+            }
         return DescriptiveMember.okStatus();
     }
 
@@ -64,9 +75,19 @@ public class ClassDiagram<TType extends ValueType, TAttribute extends ClassAttri
                 getClasses(), true, "class", BasicDiagramStatus.SameClassName);
         Vector<String> allClasses = allClassNames();
         for (TClass tClass : getClasses())
+        {
             if (tClass.havingSuperClass() && !allClasses.contains(tClass.getSuperClass()))
                 pairVector.add(DescriptiveMember.newStatus(BasicDiagramStatus.NonExistSuperClass,
                         "super Class name:" + tClass.getSuperClass() + " class name:" + tClass.getName()));
+            for(TAttribute tAttribute:tClass.getAttributes())
+                if(allClasses.contains(tAttribute.getName()))
+                    pairVector.add(DescriptiveMember.newStatus(BasicDiagramStatus.SameAttributeAndClassName,
+                            "name is:" + tAttribute.getName()));
+            for(TMethod tMethod:tClass.getMethods())
+                if(allClasses.contains(tMethod.getName()))
+                    pairVector.add(DescriptiveMember.newStatus(BasicDiagramStatus.SameMethodAndClassName,
+                            "name is:" + tMethod.getName()));
+        }
         return pairVector;
     }
 

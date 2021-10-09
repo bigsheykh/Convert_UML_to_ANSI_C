@@ -1,13 +1,15 @@
 package com.project.graphBaseDependency;
 
+import static com.project.lexicalAnalyzer.LexicalAnalyzer.*;
+
 public class DependencyEdge {
     private final DependencyStatus edgeType;
     private final String dependentNode;
     private final String fatherNode;
     public DependencyEdge(DependencyStatus edgeType, String dependentNode, String fatherNode) {
         this.edgeType = edgeType;
-        this.dependentNode = dependentNode;
-        this.fatherNode = fatherNode;
+        this.dependentNode = unStruct(deleteClassSpecifier(dependentNode));
+        this.fatherNode = unStruct(deleteClassSpecifier(fatherNode));
     }
 
     @Override

@@ -48,10 +48,10 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
         {
             if(method.getReturnValueType().getNumberOfPointer() == 0)
                 allEdges.add(new DependencyEdge(
-                        DependencyStatus.MethodObjectType, method.getReturnValueType().getTypeName(), getName()));
+                        DependencyStatus.MethodObjectType, getName(), method.getReturnValueType().getTypeName()));
             else
                 allEdges.add(new DependencyEdge(
-                        DependencyStatus.MethodPointerType, method.getReturnValueType().getTypeName(), getName()));
+                        DependencyStatus.MethodPointerType, getName(), method.getReturnValueType().getTypeName()));
             allParamTypesWithPointer.addAll(method.allParamTypesWithPointer());
             allParamTypesWithoutPointer.addAll(method.allParamTypesWithoutPointer());
 
@@ -207,6 +207,12 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
         if (!LexicalAnalyzer.isStructNameOkayInC(getName()) || getName().equals("null"))
             return DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError, "class name is invalid");
 
+        for (TMethod method:getMethods())
+            for(TAttribute attributes:getAttributes())
+                if(attributes.getName().equals(method.getName()))
+                    return DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError,
+                            "class name:" + getName() + " ,name:" + method.getName());
+
         Pair<BasicDiagramStatus, LinkedList<String>> status = DescriptiveMember.statusOfVector(
                 getConstructors(), true, "Constructor", BasicDiagramStatus.SameConstructor);
         if (status.getValue0() != BasicDiagramStatus.Okay)
@@ -227,6 +233,12 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
             vector.add(DescriptiveMember.newStatus(BasicDiagramStatus.SuperClassNameError, "super name is invalid"));
         if (!LexicalAnalyzer.isStructNameOkayInC(getName()) || getName().equals("null"))
             vector.add(DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError, "class name is invalid"));
+
+        for (TMethod method:getMethods())
+            for(TAttribute attributes:getAttributes())
+                if(attributes.getName().equals(method.getName()))
+                    vector.add( DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError,
+                            "class name:" + getName() + " ,name:" + method.getName()));
 
         vector.addAll(DescriptiveMember.getAllProblemsOfVector(
                 getConstructors(), true, "Constructor", BasicDiagramStatus.SameConstructor));

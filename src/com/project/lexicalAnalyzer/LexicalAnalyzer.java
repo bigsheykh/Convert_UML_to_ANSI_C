@@ -53,7 +53,7 @@ public interface LexicalAnalyzer {
         return s;
     }
 
-    private static String deleteClassSpecifier(String s) {
+    static String deleteClassSpecifier(String s) {
         s = deleteTypeQualifier(s);
         if (ifPlusWhiteSpaceIsSubstring(s, extern))
             return deleteClassSpecifier(s.substring(extern.length() + 1));
@@ -68,7 +68,7 @@ public interface LexicalAnalyzer {
         return s;
     }
 
-    private static String unStruct(String s) {
+    static String unStruct(String s) {
         s = deleteTypeQualifier(s);
         if (ifPlusWhiteSpaceIsSubstring(s, structKeyword))
             return s.substring(structKeyword.length() + 1);
