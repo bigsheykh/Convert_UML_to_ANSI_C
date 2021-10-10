@@ -14,7 +14,7 @@ public interface CLanguageTokens {
     String enumKeyword = "enum";
     String[] reservedTypeDescribers = new String[]{
             constKeyword, volatileKeyword, extern, structKeyword, unionKeyword,
-            classKeyword, typedef, staticKeyword, auto, register
+            classKeyword, typedef, staticKeyword, auto, register, enumKeyword
     };
 
     String openParenthesis = "(";
@@ -46,9 +46,15 @@ public interface CLanguageTokens {
     String sharp = "#";
     String backSlashNewLine = "\\\n";
 
+    String[] characters = new String[]{
+            openParenthesis, closeParenthesis, openCurlyBracket, closeCurlyBracket,
+            lessThanSign, greaterThanSign, equalSign, ellipsis, star, arrow, dot,
+            comma, semiColon, colon, tilde, doubleColon, destruct, and, whiteSpace,
+            doubleQuotation, newLine, tab, lineComment, sharp, backSlashNewLine
+    };
+
     String includeKeyword = "include";
     String defineKeyword = "define";
-    String undefKeyword = "undef";
     String ifndef = "ifndef";
     String endif = "endif";
     String choose = "CHOOSE";
@@ -73,10 +79,10 @@ public interface CLanguageTokens {
 
     String[] reservedKeyword = new String[]{
             "_Packed", "break", "case", "continue", "default", "do",
-            "else", "enum", "for", "goto", "if", returnKeyword,
-            "signed", sizeofKeyword, "switch", "unsigned", "while",
-            newKeyword, deleteKeyword, mallocKeyword, freeKeyword,
-            thisKeyword, thisManipulated
+            "else", "for", "goto", "if", returnKeyword, "signed",
+            sizeofKeyword, "switch", "unsigned", "while", newKeyword,
+            deleteKeyword, mallocKeyword, freeKeyword, thisKeyword,
+            thisManipulated, deleteManipulate, choose, iftypeKeyword
     };
 
     String[] reservedTypes = new String[]{

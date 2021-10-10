@@ -210,7 +210,7 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
         for (TMethod method:getMethods())
             for(TAttribute attributes:getAttributes())
                 if(attributes.getName().equals(method.getName()))
-                    return DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError,
+                    return DescriptiveMember.newStatus(BasicDiagramStatus.SameAttributeAndMethodName,
                             "class name:" + getName() + " ,name:" + method.getName());
 
         Pair<BasicDiagramStatus, LinkedList<String>> status = DescriptiveMember.statusOfVector(
@@ -237,7 +237,7 @@ public class ClassStructure<TType extends ValueType, TAttribute extends ClassAtt
         for (TMethod method:getMethods())
             for(TAttribute attributes:getAttributes())
                 if(attributes.getName().equals(method.getName()))
-                    vector.add( DescriptiveMember.newStatus(BasicDiagramStatus.ClassNameError,
+                    vector.add( DescriptiveMember.newStatus(BasicDiagramStatus.SameAttributeAndMethodName,
                             "class name:" + getName() + " ,name:" + method.getName()));
 
         vector.addAll(DescriptiveMember.getAllProblemsOfVector(

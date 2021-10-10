@@ -4,12 +4,10 @@ import com.project.classBaseUML.*;
 import com.project.graphBaseDependency.GraphOperation;
 import com.project.diagramGUI.*;
 import com.project.phase1CodeGeneration.*;
-import com.project.lexicalAnalyzer.*;
 import com.project.phase2CodeGeneration.DiagramInfo;
 import com.project.phase2CodeGeneration.Phase2CodeGenerator;
-import org.javatuples.Pair;
+
 import org.w3c.dom.*;
-import org.xml.sax.*;
 
 import javax.swing.*;
 import javax.xml.parsers.*;
@@ -30,21 +28,6 @@ public class Main implements Runnable{
     static public Transformer transformer;
     static public GUIDiagram guiDiagram;
     static private int counter = 0;
-
-    private static void lexicalAnalyzerUser()
-    {
-        Vector<Pair<TokenTypes, String>> tokens = LexicalAnalyzer.getTokensOfPhase2Files("SearchEngine.c");
-        FileWriter myWriter;
-        try {
-            myWriter = new FileWriter("tokens.txt");
-            for(Pair<TokenTypes, String> token:tokens)
-                myWriter.write(token.toString() + "\n");
-            myWriter.flush();
-            myWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static void generateInfoForXML(String fileName)
     {
@@ -86,7 +69,6 @@ public class Main implements Runnable{
     }
 
     public static void main(String[] args) {
-//        lexicalAnalyzerUser();
         int x = 0;
         if(args[0].endsWith(".class") || args[0].endsWith(".jar"))
             x = 1;
