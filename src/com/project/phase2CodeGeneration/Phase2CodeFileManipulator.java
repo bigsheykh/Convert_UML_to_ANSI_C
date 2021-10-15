@@ -557,7 +557,6 @@ public class Phase2CodeFileManipulator {
                 case RESERVED_KEYWORD:
                     changeToDefinitelyNotAInitializer();
                     pairVector.add(token);
-                    flush();
                     break;
                 case SEMI_COLON:
                     pairVector.add(token);

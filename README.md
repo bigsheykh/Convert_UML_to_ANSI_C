@@ -4,6 +4,15 @@
 
 # Tests
 
+## test0
+
+satisfy:
+- consistency in c code
+
+phase 1 command: -xml codeGenerationTests/Test0/test0.xml
+
+phase 2 command: -i codeGenerationTests/Test0/phase2/diagram_info -h codeGenerationTests/Test0/phase2/headers -p1 codeGenerationTests/Test0/phase2/phase1 -c codeGenerationTests/Test0/phase2/c_files
+
 ## test1
 
 satisfy:
@@ -19,6 +28,7 @@ phase 2 command: -i codeGenerationTests/Test1/phase2/diagram_info -h codeGenerat
 ## test2
 
 satisfy:
+- inheritance
 - method
 - overloading method
 - overriding method

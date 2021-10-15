@@ -2,12 +2,12 @@
 
 Student::Student_EvYa3CERu(int number_of_professors)
 {
-	// professors = new FixedSizeString[number_of_professors];
+	this->professors = (class FixedSizeString *) malloc(number_of_professors * sizeof(class FixedSizeString));
 }
 
 Student::Student_baf15zIog(class FixedSizeString the_name, int number_of_professors)
 {
-	// professors = new FixedSizeString[number_of_professors];
+	this->professors = (class FixedSizeString *) malloc(number_of_professors * sizeof(class FixedSizeString));
 	this->student_name = the_name;
 }
 
@@ -23,6 +23,5 @@ void Student::set_professor_G42ARCkI6(int number, class FixedSizeString professo
 
 Student::~Student()
 {
-
 }
 

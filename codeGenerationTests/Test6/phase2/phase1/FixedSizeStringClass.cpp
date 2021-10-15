@@ -14,6 +14,5 @@ FixedSizeString::FixedSizeString_27gidrYIq(int size_of_string)
 
 FixedSizeString::~FixedSizeString()
 {
-	free(this->all);
 }
 

@@ -46,13 +46,6 @@ public interface CLanguageTokens {
     String sharp = "#";
     String backSlashNewLine = "\\\n";
 
-    String[] characters = new String[]{
-            openParenthesis, closeParenthesis, openCurlyBracket, closeCurlyBracket,
-            lessThanSign, greaterThanSign, equalSign, ellipsis, star, arrow, dot,
-            comma, semiColon, colon, tilde, doubleColon, destruct, and, whiteSpace,
-            doubleQuotation, newLine, tab, lineComment, sharp, backSlashNewLine
-    };
-
     String includeKeyword = "include";
     String defineKeyword = "define";
     String ifndef = "ifndef";
@@ -79,8 +72,8 @@ public interface CLanguageTokens {
 
     String[] reservedKeyword = new String[]{
             "_Packed", "break", "case", "continue", "default", "do",
-            "else", "for", "goto", "if", returnKeyword, "signed",
-            sizeofKeyword, "switch", "unsigned", "while", newKeyword,
+            "else", "for", "goto", "if", "switch", "while",
+            returnKeyword, sizeofKeyword, newKeyword,
             deleteKeyword, mallocKeyword, freeKeyword, thisKeyword,
             thisManipulated, deleteManipulate, choose, iftypeKeyword
     };
