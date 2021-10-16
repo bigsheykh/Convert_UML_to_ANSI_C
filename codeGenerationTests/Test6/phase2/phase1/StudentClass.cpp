@@ -23,5 +23,6 @@ void Student::set_professor_G42ARCkI6(int number, class FixedSizeString professo
 
 Student::~Student()
 {
+    printf("%s\n", this->student_name.get_chars());
 }
 
