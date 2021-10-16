@@ -128,6 +128,7 @@ public class Main implements Runnable{
         document = documentBuilder.newDocument();
 
         frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GridLayout a = new GridLayout(1,2);
         a.setVgap(50);
         frame.setLayout(a);
@@ -150,16 +151,16 @@ public class Main implements Runnable{
         {
             BasicDiagramStatus status = guiDiagram.getStatusType();
             System.out.println("code:" + status.getBasicDiagramStatusCode());
-//                System.out.println("type:" + status);
-//                System.out.println(guiDiagram.getAllProblems());
+            System.out.println("type:" + status);
+            System.out.println(guiDiagram.getAllProblems());
 
             if(status == BasicDiagramStatus.Okay)
             {
                 System.out.println();
                 GraphOperation result = guiDiagram.getResultOfGraphOperation();
                 System.out.println("Dependency Number:" + result.getDependencyNumber());
-//                    System.out.println(Arrays.toString(result.getAllCycles()));
-//                    System.out.println();
+                System.out.println(Arrays.toString(result.getAllCycles()));
+                System.out.println();
                 if(counter %4 == 0 && result.getDependencyNumber() != 0)
                 {
                     MethodOverloader.getOverloadTable().clear();

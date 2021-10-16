@@ -1,0 +1,6 @@
+class:Map
+constructor:0
+destructor:0
+method:set_point
+method:get_point
+attribute:points[8]

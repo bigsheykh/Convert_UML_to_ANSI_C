@@ -1,0 +1,9 @@
+class:FixedSizeString
+parent:Object
+parent:String
+constructor:1
+destructor:1
+method:get_chars
+method:set_chars
+attribute:all
+attribute:size

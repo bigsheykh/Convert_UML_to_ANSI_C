@@ -1,0 +1,5 @@
+class:class2
+parent:Class1
+constructor:0
+destructor:1
+attribute:constant

@@ -1,0 +1,10 @@
+class:Cube
+parent:Number
+parent:Square
+constructor:0
+destructor:0
+method:get_cube
+method:get_square
+method:set_number
+method:get_number
+attribute:number

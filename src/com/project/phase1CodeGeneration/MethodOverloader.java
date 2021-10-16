@@ -56,7 +56,7 @@ public class MethodOverloader {
         if(!getOverloadTable().containsKey(realName))
             getOverloadTable().put(realName, new Vector<>());
         getOverloadTable().get(realName).add(new RealFunction(params.size(), mangledName, valueTypes));
-        instance.maxNumberOfParams = Math.max(params.size(), instance.maxNumberOfParams);
+        getInstance().maxNumberOfParams = Math.max(params.size(), getInstance().maxNumberOfParams);
     }
     public static String generateSelectArg(int i)
     {
@@ -113,7 +113,7 @@ public class MethodOverloader {
         builder.append(newLine);
 
 
-        for(int i = 1; i < instance.maxNumberOfParams + 4;i++)
+        for(int i = 1; i < getInstance().maxNumberOfParams + 4;i++)
         {
             builder.append(sharp + defineKeyword + whiteSpace).append(generateSelectArg(i)).append(openParenthesis);
             for(int j = 1; j <=i;j++)

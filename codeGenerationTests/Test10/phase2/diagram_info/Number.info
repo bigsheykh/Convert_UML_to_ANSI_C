@@ -1,0 +1,6 @@
+class:Number
+constructor:0
+destructor:0
+method:set_number
+method:get_number
+attribute:number
